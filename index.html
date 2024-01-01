@@ -23,6 +23,18 @@
       font-size: 24px;
       cursor: pointer;
     }
+    #score {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 18px;
+    }
+    #highScore {
+      position: absolute;
+      top: 40px;
+      right: 10px;
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
@@ -30,8 +42,11 @@
   <div id="gameOver">
     <p>Game Over!</p>
     <p id="scoreText"></p>
+    <p id="highScoreText"></p>
     <button id="playAgain">Play Again</button>
   </div>
+  <div id="score">Score: 0</div>
+  <div id="highScore">High Score: 0</div>
   <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -52,11 +67,15 @@
     let pipeFrequency = 1500;
     let pipeTimer = 0;
     let score = 0;
+    let highestScore = localStorage.getItem('highestScore') || 0;
     let gameOver = false;
 
     const gameOverDiv = document.getElementById('gameOver');
     const scoreText = document.getElementById('scoreText');
+    const highScoreText = document.getElementById('highScoreText');
     const playAgainBtn = document.getElementById('playAgain');
+    const scoreDisplay = document.getElementById('score');
+    const highScoreDisplay = document.getElementById('highScore');
 
     document.addEventListener('keydown', function(event) {
       if (event.code === 'Space') {
@@ -76,7 +95,9 @@
       }
     });
 
-    playAgainBtn.addEventListener('click', reset);
+    playAgainBtn.addEventListener('click', function() {
+      window.location.reload();
+    });
 
     function drawBird() {
       ctx.beginPath();
@@ -127,9 +148,8 @@
     }
 
     function drawScore() {
-      ctx.font = '24px Arial';
-      ctx.fillStyle = 'black';
-      ctx.fillText(`Score: ${score}`, 10, 30);
+      scoreDisplay.textContent = `Score: ${score}`;
+      highScoreDisplay.textContent = `High Score: ${highestScore}`;
     }
 
     function reset() {
@@ -145,6 +165,13 @@
       gameOver = true;
       gameOverDiv.style.display = 'block';
       scoreText.textContent = `Score: ${score}`;
+      if (score > highestScore) {
+        highestScore = score;
+        localStorage.setItem('highestScore', highestScore);
+        highScoreText.textContent = `New High Score! ${highestScore}`;
+      } else {
+        highScoreText.textContent = `High Score: ${highestScore}`;
+      }
       playAgainBtn.style.display = 'block';
     }
 
