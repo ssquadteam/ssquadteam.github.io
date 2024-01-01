@@ -118,31 +118,28 @@
     function drawPipes() {
       pipes.forEach(pipe => {
         ctx.fillStyle = 'green';
-        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
-        ctx.fillRect(pipe.x, pipe.bottomY, pipeWidth, canvas.height - pipe.bottomY);
+        ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
+        ctx.fillRect(pipe.x, pipe.bottom, pipe.width, canvas.height - pipe.bottom);
       });
     }
 
     function updatePipes() {
       if (pipeTimer % pipeFrequency === 0) {
-        const topHeight = Math.floor(Math.random() * (canvas.height - pipeGap));
-        pipes.push({ x: canvas.width, topHeight, bottomY: topHeight + pipeGap });
+        const yPos = Math.floor(Math.random() * (canvas.height - pipeGap * 2)) + pipeGap;
+        pipes.push({ x: canvas.width, top: yPos - pipeGap, bottom: yPos + pipeGap, width: pipeWidth });
       }
 
       pipes.forEach(pipe => {
         pipe.x -= pipeSpeed;
 
-        if (pipe.x + pipeWidth <= 0) {
-          pipes.shift();
-          score++;
+        if (bird.x + bird.radius > pipe.x && bird.x - bird.radius < pipe.x + pipe.width &&
+            (bird.y - bird.radius < pipe.top || bird.y + bird.radius > pipe.bottom)) {
+          endGame();
         }
 
-        if (
-          bird.x + bird.radius > pipe.x &&
-          bird.x - bird.radius < pipe.x + pipeWidth &&
-          (bird.y - bird.radius < pipe.topHeight || bird.y + bird.radius > pipe.bottomY)
-        ) {
-          endGame();
+        if (pipe.x + pipe.width <= 0) {
+          pipes.shift();
+          score++;
         }
       });
     }
