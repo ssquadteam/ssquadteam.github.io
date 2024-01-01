@@ -147,6 +147,10 @@
         bird.velocity += bird.gravity;
         bird.y += bird.velocity;
 
+        if (bird.y + bird.radius >= canvas.height || bird.y - bird.radius <= 0) {
+          endGame();
+        }
+
         drawBird();
         updatePipes();
         drawPipes();
