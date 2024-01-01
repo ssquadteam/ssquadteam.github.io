@@ -39,7 +39,7 @@
     const bird = {
       x: 50,
       y: canvas.height / 2,
-      radius: 20,
+      radius: 15,
       velocity: 0,
       gravity: 0.5,
       jump: -8
@@ -81,9 +81,17 @@
     function drawBird() {
       ctx.beginPath();
       ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
-      ctx.fillStyle = 'blue';
+      ctx.fillStyle = 'yellow';
       ctx.fill();
       ctx.closePath();
+
+      ctx.beginPath();
+      ctx.moveTo(bird.x - bird.radius, bird.y);
+      ctx.lineTo(bird.x - bird.radius * 2, bird.y - bird.radius / 2);
+      ctx.lineTo(bird.x - bird.radius * 2, bird.y + bird.radius / 2);
+      ctx.closePath();
+      ctx.fillStyle = 'yellow';
+      ctx.fill();
     }
 
     function drawPipes() {
