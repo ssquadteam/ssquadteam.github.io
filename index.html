@@ -7,16 +7,12 @@
 <style>
   body { margin: 0; overflow: hidden; }
   canvas { display: block; background-color: #4ec0ca; }
-  #gameOverScreen { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); color: white; font-size: 24px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  #score { font-size: 24px; text-align: center; }
 </style>
 </head>
 <body>
 
 <canvas id="gameCanvas"></canvas>
-<div id="gameOverScreen">
-  <p>Game Over!</p>
-  <p>Tap to Play Again</p>
-</div>
 
 <script>
 var canvas = document.getElementById('gameCanvas');
@@ -29,15 +25,15 @@ var bird = {
   y: canvas.height / 2,
   width: 40,
   height: 40,
-  gravity: 0.6, // Make gravity weaker for slower falling
-  lift: -10,
+  gravity: 0.25, // Slower gravity
+  lift: -6,
   velocity: 0
 };
 
 var pipes = [];
 var pipeWidth = 80;
 var pipeGap = 150;
-var pipeFrequency = 1500; // Increase frequency for slower pipe generation
+var pipeFrequency = 2000; // Slower pipe generation
 var lastPipeTime = 0;
 
 var score = 0;
@@ -45,34 +41,24 @@ var highScore = parseInt(localStorage.getItem('highScore')) || 0;
 
 var gameRunning = false;
 
-function showGameOverScreen(show) {
-  document.getElementById('gameOverScreen').style.display = show ? 'flex' : 'none';
-}
-
 function updateBird() {
   bird.velocity += bird.gravity;
   bird.y += bird.velocity;
 
-  if (bird.y >= canvas.height - bird.height) {
-    bird.y = canvas.height - bird.height;
-    gameOver();
-  }
-
-  if (bird.y <= 0) {
-    bird.y = 0;
+  if (bird.y >= canvas.height - bird.height || bird.y <= 0) {
     gameOver();
   }
 }
 
 function updatePipes() {
   if (Date.now() - lastPipeTime > pipeFrequency) {
-    var pipeHeight = Math.floor(Math.random() * (canvas.height - pipeGap));
+    var pipeHeight = Math.random() * (canvas.height / 2);
     pipes.push({ x: canvas.width, y: 0, height: pipeHeight });
     lastPipeTime = Date.now();
   }
 
   pipes.forEach(function(pipe, index) {
-    pipe.x -= 3; // Reduce speed for slower pipe movement
+    pipe.x -= 3; // Slower pipe movement
 
     if (pipe.x + pipeWidth < 0) {
       pipes.splice(index, 1);
@@ -94,7 +80,7 @@ function draw() {
   ctx.fillStyle = 'green';
   pipes.forEach(function(pipe) {
     ctx.fillRect(pipe.x, pipe.y, pipeWidth, pipe.height);
-    ctx.fillRect(pipe.x, pipe.height + pipeGap, pipeWidth, canvas.height);
+    ctx.fillRect(pipe.x, pipe.height + pipeGap, pipeWidth, canvas.height - pipe.height - pipeGap);
   });
 
   // Draw score
@@ -106,27 +92,27 @@ function draw() {
 
 function gameOver() {
   gameRunning = false;
-  showGameOverScreen(true);
+  bird.y = canvas.height / 2;
+  bird.velocity = 0;
+  pipes = [];
+  score = 0;
+  lastPipeTime = Date.now() - pipeFrequency;
+  // The game will wait for the next tap or click to restart
 }
 
-function gameLoop(timestamp) {
+function gameLoop() {
   if (gameRunning) {
     updateBird();
     updatePipes();
-    draw();
   }
+  draw();
   requestAnimationFrame(gameLoop);
 }
 
 canvas.addEventListener('click', function() {
   if (!gameRunning) {
     gameRunning = true;
-    bird.y = canvas.height / 2;
-    bird.velocity = 0;
-    pipes = [];
     score = 0;
-    showGameOverScreen(false);
-    lastPipeTime = Date.now() - pipeFrequency;
   } else {
     bird.velocity += bird.lift;
   }
@@ -134,7 +120,12 @@ canvas.addEventListener('click', function() {
 
 canvas.addEventListener('touchstart', function(e) {
   e.preventDefault();
-  canvas.click();
+  if (!gameRunning) {
+    gameRunning = true;
+    score = 0;
+  } else {
+    bird.velocity += bird.lift;
+  }
 }, false);
 
 requestAnimationFrame(gameLoop);
