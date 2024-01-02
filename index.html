@@ -1,129 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flappy Bird Game</title>
+<title>Snake Game</title>
 <style>
-  body { margin: 0; overflow: hidden; }
-  canvas { background: #cceeff; display: block; }
-  .score { position: absolute; color: #000; top: 10px; left: 10px; font-size: 24px; }
-  .highScore { position: absolute; color: #000; top: 10px; right: 10px; font-size: 24px; }
+  body {
+    text-align: center;
+  }
+  canvas {
+    display: block;
+    margin: auto;
+    background-color: #f0f0f0;
+    border: 1px solid black;
+  }
+  .controls {
+    margin-top: 10px;
+  }
+  .control-button {
+    font-size: 24px;
+    margin: 0 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  #difficulty {
+    margin-bottom: 10px;
+  }
 </style>
 </head>
 <body>
-<canvas id="gameCanvas"></canvas>
-<div class="score" id="score">Score: 0</div>
-<div class="highScore" id="highScore">High Score: 0</div>
+<div id="difficulty">
+  <button onclick="setDifficulty('easy')">Easy</button>
+  <button onclick="setDifficulty('medium')">Medium</button>
+  <button onclick="setDifficulty('hard')">Hard</button>
+</div>
+<canvas id="gameCanvas" width="400" height="400"></canvas>
+<div class="controls">
+  <div class="control-button" onclick="changeDirection('UP')">&#8593;</div>
+  <div>
+    <div class="control-button" onclick="changeDirection('LEFT')">&#8592;</div>
+    <div class="control-button" onclick="changeDirection('DOWN')">&#8595;</div>
+    <div class="control-button" onclick="changeDirection('RIGHT')">&#8594;</div>
+  </div>
+</div>
 <script>
-  var canvas = document.getElementById('gameCanvas');
-  var ctx = canvas.getContext('2d');
-  // Set canvas to be full screen and portrait
-  canvas.width = window.innerWidth > window.innerHeight ? window.innerHeight / 2 : window.innerWidth;
-  canvas.height = window.innerHeight;
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const box = 20;
+  let snake = [];
+  let food = {};
+  let score = 0;
+  let d;
+  let game;
+  let speed = 100; // Default speed for easy
+  let highScore = localStorage.getItem('highScore') || 0;
 
-  var bird = { x: 50, y: canvas.height / 2, width: 30, height: 25, gravity: 0.6, lift: -15, velocity: 0, symbol: '🐦' };
-  var poles = [];
-  var score = 0;
-  var highScore = localStorage.getItem('highScore') || 0;
-  var gap = 150; // Adjusted for portrait
-  var poleWidth = 50;
-  var interval = 2000; // Interval in milliseconds to add new poles
-  var firstPoleOffset = 500; // Offset for the first pole to appear closer
-  var lastTime = Date.now() - firstPoleOffset; // Adjust for the first pole to appear sooner
-  var gameSpeed = 2;
-
-  // Update the high score text
-  document.getElementById('highScore').innerText = 'High Score: ' + highScore;
-
-  function drawBird() {
-    ctx.font = bird.width + 'px Arial';
-    ctx.fillText(bird.symbol, bird.x, bird.y);
+  function createFood() {
+    food = {
+      x: Math.floor(Math.random() * 17 + 1) * box,
+      y: Math.floor(Math.random() * 15 + 3) * box
+    };
   }
 
-  function updateBird() {
-    bird.velocity += bird.gravity;
-    bird.velocity *= 0.9;
-    bird.y += bird.velocity;
-
-    if (bird.y > canvas.height) {
-      bird.y = canvas.height - bird.height;
-      bird.velocity = 0;
-    }
-
-    if (bird.y < 0) {
-      bird.y = 0;
-      bird.velocity = 0;
-    }
+  function resetGame() {
+    snake = [];
+    snake[0] = { x: 9 * box, y: 10 * box };
+    score = 0;
+    createFood();
+    if (game) clearInterval(game);
+    game = setInterval(draw, speed);
   }
 
-  function handlePoles() {
-    if (Date.now() - lastTime > interval) {
-      var poleHeight = Math.floor(Math.random() * (canvas.height - gap));
-      poles.push({ x: canvas.width, y: 0, width: poleWidth, height: poleHeight });
-      poles.push({ x: canvas.width, y: poleHeight + gap, width: poleWidth, height: canvas.height - poleHeight - gap });
-      lastTime = Date.now();
-    }
-
-    for (var i = poles.length - 1; i >= 0; i--) {
-      poles[i].x -= gameSpeed;
-      ctx.fillStyle = 'green';
-      ctx.fillRect(poles[i].x, poles[i].y, poles[i].width, poles[i].height);
-
-      // Check if the pole has just passed the bird to increment score
-      if (poles[i].x + poleWidth < bird.x && !poles[i].scored) {
-        poles[i].scored = true; // Mark pole as scored
-        score++;
-        document.getElementById('score').innerText = 'Score: ' + score;
-        if (score > highScore) {
-          highScore = score;
-          localStorage.setItem('highScore', highScore);
-          document.getElementById('highScore').innerText = 'High Score: ' + highScore;
-        }
-      }
-    }
+  function setDifficulty(level) {
+    if (level === 'easy') speed = 100;
+    else if (level === 'medium') speed = 75;
+    else if (level === 'hard') speed = 50;
+    resetGame();
   }
 
-  function detectCollision() {
-    for (var i = 0; i < poles.length; i++) {
-      if (bird.x < poles[i].x + poles[i].width &&
-          bird.x + bird.width > poles[i].x &&
-          bird.y < poles[i].y + poles[i].height &&
-          bird.y + bird.height > poles[i].y) {
-        // Collision detected, reset score and bird position
-        score = 0;
-        bird.y = canvas.height / 2;
-        bird.velocity = 0;
-        poles = [];
-        document.getElementById('score').innerText = 'Score: ' + score;
-      }
-    }
-  }
-
-  function loop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    handlePoles();
-    updateBird();
-    drawBird();
-    detectCollision();
-    requestAnimationFrame(loop);
-  }
-
-  function flap() {
-    bird.velocity += bird.lift;
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.code === 'Space') {
-      flap();
-    }
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft' && d !== 'RIGHT') d = 'LEFT';
+    else if (event.key === 'ArrowUp' && d !== 'DOWN') d = 'UP';
+    else if (event.key === 'ArrowRight' && d !== 'LEFT') d = 'RIGHT';
+    else if (event.key === 'ArrowDown' && d !== 'UP') d = 'DOWN';
+    else if (event.key === 'a' && d !== 'RIGHT') d = 'LEFT';
+    else if (event.key === 'w' && d !== 'DOWN') d = 'UP';
+    else if (event.key === 'd' && d !== 'LEFT') d = 'RIGHT';
+    else if (event.key === 's' && d !== 'UP') d = 'DOWN';
   });
 
-  canvas.addEventListener('touchstart', function(e) {
-    flap();
-    e.preventDefault();
-  }, { passive: false });
+  function changeDirection(direction) {
+    if (direction === 'LEFT' && d !== 'RIGHT') d = 'LEFT';
+    else if (direction === 'UP' && d !== 'DOWN') d = 'UP';
+    else if (direction === 'RIGHT' && d !== 'LEFT') d = 'RIGHT';
+    else if (direction === 'DOWN' && d !== 'UP') d = 'DOWN';
+  }
 
-  loop();
+  function collision(head, array) {
+    for (let i = 0; i < array.length; i++) {
+      if (head.x === array[i].x && head.y === array[i].y) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < snake.length; i++) {
+      ctx.fillStyle = (i === 0) ? 'green' : 'white';
+      ctx.fillRect(snake[i].x, snake[i].y, box, box);
+      ctx.strokeStyle = 'red';
+      ctx.strokeRect(snake[i].x, snake[i].y, box, box);
+    }
+
+    ctx.fillStyle = 'red';
+    ctx.fillRect(food.x, food.y, box, box);
+
+    let snakeX = snake[0].x;
+    let snakeY = snake[0].y;
+
+    if (d === 'LEFT') snakeX -= box;
+    if (d === 'UP') snakeY -= box;
+    if (d === 'RIGHT') snakeX += box;
+    if (d === 'DOWN') snakeY += box;
+
+    if (snakeX === food.x && snakeY === food.y) {
+      score++;
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('highScore', highScore);
+      }
+      createFood();
+    } else {
+      snake.pop();
+    }
+
+    let newHead = { x: snakeX, y: snakeY };
+
+    if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
+      clearInterval(game);
+      alert('Game Over. Score: ' + score);
+      resetGame();
+    }
+
+    snake.unshift(newHead);
+
+    ctx.fillStyle = 'black';
+    ctx.font = '20px Changa one';
+    ctx.fillText('Score: ' + score, box, 1.6 * box);
+    ctx.fillText('High Score: ' + highScore, box, 2.6 * box);
+  }
+
+  resetGame(); // Start the game on easy by default
 </script>
 </body>
 </html>
