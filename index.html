@@ -2,68 +2,86 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sadat Sahib's Portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sadat Sahib's Portfolio</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        body, html {
             margin: 0;
             padding: 0;
-            background: #000;
-            color: #fff;
-            line-height: 1.6;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .background-image {
+            position: fixed;
+            left: 0;
+            right: 0;
+            z-index: -1;
+
+            display: block;
+            background-image: url('https://source.unsplash.com/featured/?interstellar');
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+            filter: brightness(50%);
         }
 
         .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 0 20px;
-        }
-
-        header {
-            text-align: center;
-            background: linear-gradient(135deg, #302b63, #24243e);
-            padding: 30px 0;
-            border-bottom: 5px solid magenta;
+            z-index: 1;
+            position: relative;
+            padding: 20px;
+            color: white;
         }
 
         header img {
             border-radius: 50%;
-            width: 200px;
-            box-shadow: 0 0 20px #950740;
+            width: 150px;
+            border: 4px solid magenta;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        header img:hover {
+            transform: scale(1.1);
         }
 
         header h1 {
+            text-align: center;
             color: magenta;
-            margin: 10px 0;
         }
 
-        .profile-picture {
-            transition: transform 0.3s ease;
+        .tab {
+            display: none;
         }
 
-        .profile-picture:hover {
-            transform: scale(1.05);
+        .tab.active {
+            display: block;
+            animation: fadeIn 0.5s;
         }
 
-        section {
-            background: #111;
-            margin: 20px 0;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease-in-out;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        section:hover {
-            background: #1a001a;
-        }
-
-        h2 {
-            color: magenta;
-            border-bottom: 2px solid magenta;
-            padding-bottom: 10px;
+        .tab-buttons {
+            text-align: center;
             margin-bottom: 20px;
+        }
+
+        .tab-button {
+            background-color: black;
+            color: magenta;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .tab-button:hover {
+            background-color: magenta;
+            color: black;
         }
 
         footer {
@@ -71,69 +89,62 @@
             padding: 20px;
             background: #222;
             color: magenta;
-        }
-
-        .smooth-scroll {
-            transition: background 0.3s, box-shadow 0.3s;
-        }
-
-        .smooth-scroll:hover {
-            background: #950740;
-            box-shadow: 0 0 20px #950740;
-        }
-
-        @media (max-width: 768px) {
-            header h1, footer p {
-                font-size: 18px;
-            }
+            position: absolute;
+            bottom: 0;
+            width: 100%;
         }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const smoothScrollElements = document.querySelectorAll(".smooth-scroll");
-            smoothScrollElements.forEach(elem => {
-                elem.addEventListener("click", e => {
-                    e.preventDefault();
-                    document.querySelector(elem.getAttribute("href")).scrollIntoView({
-                        behavior: "smooth"
-                    });
-                });
-            });
-        });
-    </script>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <img src="https://github.com/ssquadteam.png" alt="Sadat Sahib" class="profile-picture">
-            <h1>Sadat Sahib's Portfolio 🌟</h1>
-        </div>
-    </header>
-
+    <div class="background-image"></div>
     <div class="container">
-        <section id="about-me">
+        <header>
+            <a href="https://github.com/ssquadteam" target="_blank">
+                <img src="https://github.com/ssquadteam.png" alt="Sadat Sahib" class="profile-picture">
+            </a>
+            <h1>Sadat Sahib's Portfolio</h1>
+        </header>
+
+        <div class="tab-buttons">
+            <button class="tab-button" onclick="openTab(event, 'about-me')">About Me</button>
+            <button class="tab-button" onclick="openTab(event, 'projects')">Projects</button>
+            <button class="tab-button" onclick="openTab(event, 'contact')">Contact</button>
+        </div>
+
+        <div id="about-me" class="tab active">
             <h2>About Me</h2>
             <p>👋 Hi there! I'm Sadat Sahib, a seasoned Java developer with a flair for creating immersive game experiences using Unreal and Unity. I'm also adept at constructing robust database architectures. Welcome to my digital space where innovation meets efficiency!</p>
-        </section>
+        </div>
 
-        <section id="projects">
+        <div id="projects" class="tab">
             <h2>Projects</h2>
             <p>🚀 I used to be owner of the Minex Network, one of the larger Minecraft Servers in Asia during 2021. I have worked on Java Plugins such as MinexPractice and many more!</p>
-        </section>
+        </div>
 
-        <section id="skills">
-            <h2>Skills</h2>
-            <p>💼 Here's a snapshot of my technical toolkit: Java (Spring, Hibernate), Unreal Engine, Unity 3D, SQL, NoSQL (MongoDB), and more. I'm always on the lookout for new technologies to master!</p>
-        </section>
-
-        <section id="contact">
+        <div id="contact" class="tab">
             <h2>Contact</h2>
             <p>📬 You can find me on Discord @ssquadteam, or Instagram @aura_cxv7</p>
-        </section>
+        </div>
     </div>
 
     <footer>
         <p>Copyright © 2024 Sadat Sahib. All rights reserved.</p>
     </footer>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabbuttons;
+            tabcontent = document.getElementsByClassName("tab");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
 </body>
 </html>
