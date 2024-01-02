@@ -1,159 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snake Game</title>
-<style>
-  body {
-    text-align: center;
-  }
-  canvas {
-    display: block;
-    margin: auto;
-    background-color: #f0f0f0;
-    border: 1px solid black;
-  }
-  .controls {
-    margin-top: 10px;
-  }
-  .control-button {
-    font-size: 24px;
-    margin: 0 10px;
-    cursor: pointer;
-    user-select: none;
-  }
-  #difficulty {
-    margin-bottom: 10px;
-  }
-</style>
+    <meta charset="UTF-8">
+    <title>Sadat Sahib's Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        header {
+            text-align: center;
+            background: linear-gradient(135deg, #302b63, #24243e);
+            padding: 30px 0;
+            border-bottom: 5px solid magenta;
+        }
+
+        header img {
+            border-radius: 50%;
+            width: 200px;
+            box-shadow: 0 0 20px #950740;
+        }
+
+        header h1 {
+            color: magenta;
+            margin: 10px 0;
+        }
+
+        .profile-picture {
+            transition: transform 0.3s ease;
+        }
+
+        .profile-picture:hover {
+            transform: scale(1.05);
+        }
+
+        section {
+            background: #111;
+            margin: 20px 0;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease-in-out;
+        }
+
+        section:hover {
+            background: #1a001a;
+        }
+
+        h2 {
+            color: magenta;
+            border-bottom: 2px solid magenta;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #222;
+            color: magenta;
+        }
+
+        .smooth-scroll {
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .smooth-scroll:hover {
+            background: #950740;
+            box-shadow: 0 0 20px #950740;
+        }
+
+        @media (max-width: 768px) {
+            header h1, footer p {
+                font-size: 18px;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const smoothScrollElements = document.querySelectorAll(".smooth-scroll");
+            smoothScrollElements.forEach(elem => {
+                elem.addEventListener("click", e => {
+                    e.preventDefault();
+                    document.querySelector(elem.getAttribute("href")).scrollIntoView({
+                        behavior: "smooth"
+                    });
+                });
+            });
+        });
+    </script>
 </head>
 <body>
-<div id="difficulty">
-  <button onclick="setDifficulty('easy')">Easy</button>
-  <button onclick="setDifficulty('medium')">Medium</button>
-  <button onclick="setDifficulty('hard')">Hard</button>
-</div>
-<canvas id="gameCanvas" width="400" height="400"></canvas>
-<div class="controls">
-  <div class="control-button" onclick="changeDirection('UP')">&#8593;</div>
-  <div>
-    <div class="control-button" onclick="changeDirection('LEFT')">&#8592;</div>
-    <div class="control-button" onclick="changeDirection('DOWN')">&#8595;</div>
-    <div class="control-button" onclick="changeDirection('RIGHT')">&#8594;</div>
-  </div>
-</div>
-<script>
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-  const box = 20;
-  let snake = [];
-  let food = {};
-  let score = 0;
-  let d;
-  let game;
-  let speed = 100; // Default speed for easy
-  let highScore = localStorage.getItem('highScore') || 0;
+    <header>
+        <div class="container">
+            <img src="https://github.com/ssquadteam.png" alt="Sadat Sahib" class="profile-picture">
+            <h1>Sadat Sahib's Portfolio 🌟</h1>
+        </div>
+    </header>
 
-  function createFood() {
-    food = {
-      x: Math.floor(Math.random() * 17 + 1) * box,
-      y: Math.floor(Math.random() * 15 + 3) * box
-    };
-  }
+    <div class="container">
+        <section id="about-me">
+            <h2>About Me</h2>
+            <p>👋 Hi there! I'm Sadat Sahib, a seasoned Java developer with a flair for creating immersive game experiences using Unreal and Unity. I'm also adept at constructing robust database architectures. Welcome to my digital space where innovation meets efficiency!</p>
+        </section>
 
-  function resetGame() {
-    snake = [];
-    snake[0] = { x: 9 * box, y: 10 * box };
-    score = 0;
-    createFood();
-    if (game) clearInterval(game);
-    game = setInterval(draw, speed);
-  }
+        <section id="projects">
+            <h2>Projects</h2>
+            <p>🚀 I used to be owner of the Minex Network, one of the larger Minecraft Servers in Asia during 2021. I have worked on Java Plugins such as MinexPractice and many more!</p>
+        </section>
 
-  function setDifficulty(level) {
-    if (level === 'easy') speed = 100;
-    else if (level === 'medium') speed = 75;
-    else if (level === 'hard') speed = 50;
-    resetGame();
-  }
+        <section id="skills">
+            <h2>Skills</h2>
+            <p>💼 Here's a snapshot of my technical toolkit: Java (Spring, Hibernate), Unreal Engine, Unity 3D, SQL, NoSQL (MongoDB), and more. I'm always on the lookout for new technologies to master!</p>
+        </section>
 
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowLeft' && d !== 'RIGHT') d = 'LEFT';
-    else if (event.key === 'ArrowUp' && d !== 'DOWN') d = 'UP';
-    else if (event.key === 'ArrowRight' && d !== 'LEFT') d = 'RIGHT';
-    else if (event.key === 'ArrowDown' && d !== 'UP') d = 'DOWN';
-    else if (event.key === 'a' && d !== 'RIGHT') d = 'LEFT';
-    else if (event.key === 'w' && d !== 'DOWN') d = 'UP';
-    else if (event.key === 'd' && d !== 'LEFT') d = 'RIGHT';
-    else if (event.key === 's' && d !== 'UP') d = 'DOWN';
-  });
+        <section id="contact">
+            <h2>Contact</h2>
+            <p>📬 Let's connect! Whether you have a question or just want to say hi, I'm all ears. Reach out to me, and let's start a conversation that could lead to our next big adventure.</p>
+        </section>
+    </div>
 
-  function changeDirection(direction) {
-    if (direction === 'LEFT' && d !== 'RIGHT') d = 'LEFT';
-    else if (direction === 'UP' && d !== 'DOWN') d = 'UP';
-    else if (direction === 'RIGHT' && d !== 'LEFT') d = 'RIGHT';
-    else if (direction === 'DOWN' && d !== 'UP') d = 'DOWN';
-  }
-
-  function collision(head, array) {
-    for (let i = 0; i < array.length; i++) {
-      if (head.x === array[i].x && head.y === array[i].y) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < snake.length; i++) {
-      ctx.fillStyle = (i === 0) ? 'green' : 'white';
-      ctx.fillRect(snake[i].x, snake[i].y, box, box);
-      ctx.strokeStyle = 'red';
-      ctx.strokeRect(snake[i].x, snake[i].y, box, box);
-    }
-
-    ctx.fillStyle = 'red';
-    ctx.fillRect(food.x, food.y, box, box);
-
-    let snakeX = snake[0].x;
-    let snakeY = snake[0].y;
-
-    if (d === 'LEFT') snakeX -= box;
-    if (d === 'UP') snakeY -= box;
-    if (d === 'RIGHT') snakeX += box;
-    if (d === 'DOWN') snakeY += box;
-
-    if (snakeX === food.x && snakeY === food.y) {
-      score++;
-      if (score > highScore) {
-        highScore = score;
-        localStorage.setItem('highScore', highScore);
-      }
-      createFood();
-    } else {
-      snake.pop();
-    }
-
-    let newHead = { x: snakeX, y: snakeY };
-
-    if (snakeX < 0 || snakeY < 0 || snakeX >= canvas.width || snakeY >= canvas.height || collision(newHead, snake)) {
-      clearInterval(game);
-      alert('Game Over. Score: ' + score);
-      resetGame();
-    }
-
-    snake.unshift(newHead);
-
-    ctx.fillStyle = 'black';
-    ctx.font = '20px Changa one';
-    ctx.fillText('Score: ' + score, box, 1.6 * box);
-    ctx.fillText('High Score: ' + highScore, box, 2.6 * box);
-  }
-
-  resetGame(); // Start the game on easy by default
-</script>
+    <footer>
+        <p>Copyright © 2024 Sadat Sahib. All rights reserved.</p>
+    </footer>
 </body>
 </html>
