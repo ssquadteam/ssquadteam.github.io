@@ -1,53 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flappy Bird Game</title>
 <style>
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background: #f3f3f3;
-  }
-  #gameCanvas {
-    display: block;
-    background: #fff;
-    border: 1px solid #000;
-  }
-  .score {
-    position: absolute;
-    color: #000;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 24px;
-  }
+  body { margin: 0; overflow: hidden; }
+  canvas { background: #cceeff; display: block; }
+  .score { position: absolute; color: #000; top: 10px; left: 10px; font-size: 24px; }
+  .highScore { position: absolute; color: #000; top: 10px; right: 10px; font-size: 24px; }
 </style>
 </head>
 <body>
-<canvas id="gameCanvas" width="400" height="600"></canvas>
+<canvas id="gameCanvas"></canvas>
 <div class="score" id="score">Score: 0</div>
+<div class="highScore" id="highScore">High Score: 0</div>
 <script>
   var canvas = document.getElementById('gameCanvas');
   var ctx = canvas.getContext('2d');
+  // Set canvas to be full screen and portrait
+  canvas.width = window.innerWidth > window.innerHeight ? window.innerHeight / 2 : window.innerWidth;
+  canvas.height = window.innerHeight;
+
   var bird = { x: 50, y: canvas.height / 2, width: 30, height: 25, gravity: 0.6, lift: -15, velocity: 0, symbol: '🐦' };
   var poles = [];
   var score = 0;
   var highScore = localStorage.getItem('highScore') || 0;
-  var gap = 150;
+  var gap = 150; // Adjusted for portrait
   var poleWidth = 50;
+  var interval = 2000; // Interval in milliseconds to add new poles
+  var firstPoleOffset = 500; // Offset for the first pole to appear closer
+  var lastTime = Date.now() - firstPoleOffset; // Adjust for the first pole to appear sooner
   var gameSpeed = 2;
-  var lastTime = Date.now();
-  var interval = 2000;
-  var firstPoleOffset = 500;
+
+  // Update the high score text
+  document.getElementById('highScore').innerText = 'High Score: ' + highScore;
 
   function drawBird() {
-    ctx.fillStyle = 'yellow';
-    ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+    ctx.font = bird.width + 'px Arial';
+    ctx.fillText(bird.symbol, bird.x, bird.y);
   }
 
   function updateBird() {
@@ -55,7 +45,7 @@
     bird.velocity *= 0.9;
     bird.y += bird.velocity;
 
-    if (bird.y > canvas.height - bird.height) {
+    if (bird.y > canvas.height) {
       bird.y = canvas.height - bird.height;
       bird.velocity = 0;
     }
@@ -69,8 +59,8 @@
   function handlePoles() {
     if (Date.now() - lastTime > interval) {
       var poleHeight = Math.floor(Math.random() * (canvas.height - gap));
-      poles.push({ x: canvas.width, y: 0, width: poleWidth, height: poleHeight, scored: false });
-      poles.push({ x: canvas.width, y: poleHeight + gap, width: poleWidth, height: canvas.height - poleHeight - gap, scored: false });
+      poles.push({ x: canvas.width, y: 0, width: poleWidth, height: poleHeight });
+      poles.push({ x: canvas.width, y: poleHeight + gap, width: poleWidth, height: canvas.height - poleHeight - gap });
       lastTime = Date.now();
     }
 
@@ -79,18 +69,16 @@
       ctx.fillStyle = 'green';
       ctx.fillRect(poles[i].x, poles[i].y, poles[i].width, poles[i].height);
 
+      // Check if the pole has just passed the bird to increment score
       if (poles[i].x + poleWidth < bird.x && !poles[i].scored) {
-        poles[i].scored = true;
+        poles[i].scored = true; // Mark pole as scored
         score++;
         document.getElementById('score').innerText = 'Score: ' + score;
         if (score > highScore) {
           highScore = score;
           localStorage.setItem('highScore', highScore);
+          document.getElementById('highScore').innerText = 'High Score: ' + highScore;
         }
-      }
-
-      if (poles[i].x < -poleWidth) {
-        poles.splice(i, 1);
       }
     }
   }
@@ -101,12 +89,12 @@
           bird.x + bird.width > poles[i].x &&
           bird.y < poles[i].y + poles[i].height &&
           bird.y + bird.height > poles[i].y) {
+        // Collision detected, reset score and bird position
         score = 0;
         bird.y = canvas.height / 2;
         bird.velocity = 0;
         poles = [];
         document.getElementById('score').innerText = 'Score: ' + score;
-        break;
       }
     }
   }
