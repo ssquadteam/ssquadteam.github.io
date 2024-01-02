@@ -3,153 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dotus Katus (Assignment for Harvard CS50 Course)</title>
+<title>Flappy Bird Game</title>
 <style>
-  canvas { display: block; margin: 0 auto; background-color: #4ec0ca; }
-  #score { font-size: 24px; text-align: center; }
+  body { margin: 0; overflow: hidden; }
+  canvas { background: #cceeff; display: block; }
+  .score { position: absolute; color: #000; top: 10px; left: 10px; font-size: 24px; }
 </style>
 </head>
 <body>
-
-<div id="score">Score: 0 | High Score: 0</div>
-<canvas id="gameCanvas" width="320" height="480"></canvas>
-
+<canvas id="gameCanvas"></canvas>
+<div class="score" id="score">0</div>
 <script>
-// Game variables
-var canvas = document.getElementById('gameCanvas');
-var ctx = canvas.getContext('2d');
-var bird = { x: 50, y: 100, width: 20, height: 20, gravity: 0.6, lift: -15, velocity: 0 };
-var pipes = [];
-var pipeWidth = 50;
-var pipeGap = 100;
-var score = 0;
-var highScore = localStorage.getItem('highScore') || 0;
-var gameRunning = false;
+  var canvas = document.getElementById('gameCanvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-// Update the score display
-function updateScoreDisplay() {
-  document.getElementById('score').textContent = 'Score: ' + score + ' | High Score: ' + highScore;
-}
+  var bird = { x: 50, y: 50, width: 30, height: 25, gravity: 0.6, lift: -15, velocity: 0, symbol: '🐦' };
+  var poles = [];
+  var score = 0;
+  var highScore = localStorage.getItem('highScore') || 0;
+  var gap = 200;
+  var poleWidth = 50;
+  var interval = 2000; // Interval in milliseconds to add new poles
+  var lastTime = Date.now();
+  var gameSpeed = 2;
 
-// Function to start the game
-function startGame() {
-  bird.y = 100;
-  bird.velocity = 0;
-  pipes = [];
-  score = 0;
-  gameRunning = true;
-  pipes.push({ x: canvas.width, y: 0, height: Math.floor(Math.random() * (canvas.height - pipeGap)) });
-  window.requestAnimationFrame(gameLoop);
-}
-
-// Function to handle the bird's movement
-function updateBird() {
-  bird.velocity += bird.gravity;
-  bird.velocity *= 0.9;
-  bird.y += bird.velocity;
-
-  if (bird.y > canvas.height - bird.height) {
-    bird.y = canvas.height - bird.height;
-    gameOver();
+  function drawBird() {
+    ctx.font = bird.width + 'px Arial';
+    ctx.fillText(bird.symbol, bird.x, bird.y + bird.height);
   }
 
-  if (bird.y < 0) {
-    bird.y = 0;
-    gameOver();
-  }
-}
+  function updateBird() {
+    bird.velocity += bird.gravity;
+    bird.velocity *= 0.9;
+    bird.y += bird.velocity;
 
-// Function to handle the pipes movement and creation
-function updatePipes() {
-  for (var i = pipes.length - 1; i >= 0; i--) {
-    pipes[i].x -= 2;
-    if (pipes[i].x < -pipeWidth) {
-      score++;
-      highScore = Math.max(score, highScore);
-      localStorage.setItem('highScore', highScore);
-      updateScoreDisplay();
-      pipes.splice(i, 1);
-      var pipeHeight = Math.floor(Math.random() * (canvas.height - pipeGap));
-      pipes.push({ x: canvas.width, y: 0, height: pipeHeight });
+    if (bird.y > canvas.height) {
+      bird.y = canvas.height - bird.height;
+      bird.velocity = 0;
+    }
+
+    if (bird.y < 0) {
+      bird.y = 0;
+      bird.velocity = 0;
     }
   }
-}
 
-// Function to draw everything on the canvas
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  function handlePoles() {
+    if (Date.now() - lastTime > interval) {
+      var poleHeight = Math.floor(Math.random() * (canvas.height - gap));
+      poles.push({ x: canvas.width, y: 0, width: poleWidth, height: poleHeight });
+      poles.push({ x: canvas.width, y: poleHeight + gap, width: poleWidth, height: canvas.height - poleHeight - gap });
+      lastTime = Date.now();
+    }
 
-  // Draw bird
-  ctx.fillStyle = 'yellow';
-  ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+    for (var i = poles.length - 1; i >= 0; i--) {
+      poles[i].x -= gameSpeed;
+      ctx.fillStyle = 'green';
+      ctx.fillRect(poles[i].x, poles[i].y, poles[i].width, poles[i].height);
 
-  // Draw pipes
-  ctx.fillStyle = 'green';
-  pipes.forEach(function(pipe) {
-    ctx.fillRect(pipe.x, pipe.y, pipeWidth, pipe.height);
-    ctx.fillRect(pipe.x, pipe.height + pipeGap, pipeWidth, canvas.height - pipe.height - pipeGap);
-  });
-}
-
-// Function to check for collisions
-function checkCollision() {
-  for (var i = 0; i < pipes.length; i++) {
-    if (bird.x < pipes[i].x + pipeWidth &&
-        bird.x + bird.width > pipes[i].x &&
-        (bird.y < pipes[i].height || bird.y + bird.height > pipes[i].height + pipeGap)) {
-      gameOver();
+      if (poles[i].x < -poleWidth) {
+        poles.splice(i, 1);
+        score++;
+        document.getElementById('score').innerText = score;
+        if (score > highScore) {
+          highScore = score;
+          localStorage.setItem('highScore', highScore);
+        }
+      }
     }
   }
-}
 
-// Function to handle game over
-function gameOver() {
-  gameRunning = false;
-  updateScoreDisplay();
-  ctx.fillStyle = 'black';
-  ctx.fillText('Game Over! Tap to play again', 50, canvas.height / 2);
-}
+  function detectCollision() {
+    for (var i = 0; i < poles.length; i++) {
+      if (bird.x < poles[i].x + poles[i].width &&
+          bird.x + bird.width > poles[i].x &&
+          bird.y < poles[i].y + poles[i].height &&
+          bird.y + bird.height > poles[i].y) {
+        // Collision detected, reset score and bird position
+        score = 0;
+        bird.y = 50;
+        bird.velocity = 0;
+        poles = [];
+      }
+    }
+  }
 
-// The main game loop
-function gameLoop() {
-  if (gameRunning) {
+  function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    handlePoles();
     updateBird();
-    updatePipes();
-    checkCollision();
-    draw();
-    window.requestAnimationFrame(gameLoop);
+    drawBird();
+    detectCollision();
+    requestAnimationFrame(loop);
   }
-}
 
-// Event listener for mouse click
-canvas.addEventListener('click', function() {
-  if (gameRunning) {
+  function flap() {
     bird.velocity += bird.lift;
-  } else {
-    startGame();
   }
-});
 
-// Event listener for touch
-canvas.addEventListener('touchstart', function(e) {
-  e.preventDefault(); // Prevent scrolling when touching the canvas
-  if (gameRunning) {
-    bird.velocity += bird.lift;
-  } else {
-    startGame();
-  }
-}, false);
+  document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space') {
+      flap();
+    }
+  });
 
-// Set the font for game over text
-ctx.font = '16px Arial';
-ctx.fillStyle = 'black';
+  canvas.addEventListener('touchstart', function(e) {
+    flap();
+    e.preventDefault();
+  }, { passive: false });
 
-// Initialize the high score display
-updateScoreDisplay();
-
-// Start the game
-startGame();
+  loop();
 </script>
-
 </body>
 </html>
