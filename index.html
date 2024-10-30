@@ -1,139 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Sadat Sahib's Portfolio</title>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="../../9J92G7tn1VcI.rs/Kznl4Nz0oYsP.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #000;
-            color: #fff;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 0 20px;
-        }
-
-        header {
-            text-align: center;
-            background: linear-gradient(135deg, #302b63, #24243e);
-            padding: 30px 0;
-            border-bottom: 5px solid magenta;
-        }
-
-        header img {
-            border-radius: 50%;
-            width: 200px;
-            box-shadow: 0 0 20px #950740;
-        }
-
-        header h1 {
-            color: magenta;
-            margin: 10px 0;
-        }
-
-        .profile-picture {
-            transition: transform 0.3s ease;
-        }
-
-        .profile-picture:hover {
-            transform: scale(1.05);
-        }
-
-        section {
-            background: #111;
-            margin: 20px 0;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease-in-out;
-        }
-
-        section:hover {
-            background: #1a001a;
-        }
-
-        h2 {
-            color: magenta;
-            border-bottom: 2px solid magenta;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: #222;
-            color: magenta;
-        }
-
-        .smooth-scroll {
-            transition: background 0.3s, box-shadow 0.3s;
-        }
-
-        .smooth-scroll:hover {
-            background: #950740;
-            box-shadow: 0 0 20px #950740;
-        }
-
-        @media (max-width: 768px) {
-            header h1, footer p {
-                font-size: 18px;
-            }
-        }
-    </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const smoothScrollElements = document.querySelectorAll(".smooth-scroll");
-            smoothScrollElements.forEach(elem => {
-                elem.addEventListener("click", e => {
-                    e.preventDefault();
-                    document.querySelector(elem.getAttribute("href")).scrollIntoView({
-                        behavior: "smooth"
-                    });
-                });
-            });
-        });
-    </script>
+    <meta name="generator" content="Astro v4.16.7">
+    <title>Sadat's Resume</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
 </head>
-<body>
-    <header>
-        <div class="container">
-            <img src="https://github.com/ssquadteam.png" alt="Sadat Sahib" class="profile-picture">
-            <h1>Sadat Sahib's Portfolio 🌟</h1>
-        </div>
-    </header>
-
-    <div class="container">
-        <section id="about-me">
-            <h2>About Me</h2>
-            <p>👋 Hi there! I'm Sadat Sahib, a seasoned Java developer with a flair for creating immersive game experiences using Unreal and Unity. I'm also adept at constructing robust database architectures. Welcome to my digital space where innovation meets efficiency!</p>
-        </section>
-
-        <section id="projects">
-            <h2>Projects</h2>
-            <p>🚀 I used to be owner of the Minex Network, one of the larger Minecraft Servers in Asia during 2021. I have worked on Java Plugins such as MinexPractice and many more!</p>
-        </section>
-
-        <section id="skills">
-            <h2>Skills</h2>
-            <p>💼 Here's a snapshot of my technical toolkit: Java (Spring, Hibernate), Unreal Engine, Unity 3D, SQL, NoSQL (MongoDB), and more. I'm always on the lookout for new technologies to master!</p>
-        </section>
-
-        <section id="contact">
-            <h2>Contact</h2>
-            <p>📬 Let's connect! Whether you have a question or just want to say hi, I'm all ears. Reach out to me, and let's start a conversation that could lead to our next big adventure.</p>
-        </section>
+<body class="flex min-h-screen items-center justify-center bg-black p-2 font-mono text-white sm:p-4" style="font-family: 'JetBrains Mono', monospace;">
+    <div class="container-wrapper">
+        <main class="relative w-full max-w-6xl border border-white p-4 text-xs sm:p-6 sm:text-sm">
+            <div class="absolute -top-3 left-2 bg-black px-2">
+                <span class="text-sm font-bold">Resume</span>
+            </div>
+            <div class="mt-2">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                    <div class="md:col-span-1">
+                        <header class="mb-6">
+                            <h1 class="mb-1 text-3xl font-bold">Sadat Sahib</h1>
+                            <p class="text-sm text-gray-400">Java Dev. &amp; Systems Engineer</p>
+                            <div class="mt-2 space-y-1 text-xs text-gray-500">
+                                <p>
+                                    <i class="fas fa-map-marker-alt inline-block w-4"></i> Barishal, BD
+                                </p>
+                                <p>
+                                    <i class="fas fa-envelope inline-block w-4"></i>
+                                    <a href="/cdn-cgi/l/email-protection#fb989a8fbb9a8e99899e82d58988" class="hover:text-white transition-colors"><span class="__cf_email__" data-cfemail="4a292b3e0a2b3f28382f33643839">[email&#160;protected]</span></a>
+                                </p>
+                                <p>
+                                    <i class="fab fa-github inline-block w-4"></i>
+                                    <a href="https://github.com/ssquadteam" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">
+                                        github.com/ssquadteam
+                                    </a>
+                                </p>
+                            </div>
+                        </header>
+                        <section>
+                            <h2 class="mb-3 text-xl font-bold">Technical Expertise</h2>
+                            <div class="space-y-2">
+                                <div>
+                                    <div class="mb-1 flex items-center justify-between">
+                                        <span class="text-sm">Docker/Kubenetes</span>
+                                        <span class="text-xs text-gray-400">Expert</span>
+                                    </div>
+                                    <div class="flex h-2 w-full">
+                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
+                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
+                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
+                                        <div class="h-full w-1/4" style="background-color: #dee2e6"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mb-1 flex items-center justify-between">
+                                        <span class="text-sm">JVM Languages</span>
+                                        <span class="text-xs text-gray-400">Expert</span>
+                                    </div>
+                                    <div class="flex h-2 w-full">
+                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
+                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
+                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
+                                        <div class="h-full w-1/4" style="background-color: #dee2e6"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mb-1 flex items-center justify-between">
+                                        <span class="text-sm">C++/C#/C</span>
+                                        <span class="text-xs text-gray-400">Expert</span>
+                                    </div>
+                                    <div class="flex h-2 w-full">
+                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
+                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
+                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
+                                        <div class="h-full w-1/4" style="background-color: #dee2e6"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mb-1 flex items-center justify-between">
+                                        <span class="text-sm">Network Security</span>
+                                        <span class="text-xs text-gray-400">Expert</span>
+                                    </div>
+                                    <div class="flex h-2 w-full">
+                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
+                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
+                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
+                                        <div class="h-full w-1/4" style="background-color: #dee2e6"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mb-1 flex items-center justify-between">
+                                        <span class="text-sm">Unreal Engine</span>
+                                        <span class="text-xs text-gray-400">Expert</span>
+                                    </div>
+                                    <div class="flex h-2 w-full">
+                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
+                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
+                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
+                                        <div class="h-full w-1/4" style="background-color: #dee2e6"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mb-1 flex items-center justify-between">
+                                        <span class="text-sm">MySQL, MariaDB, MongoDB</span>
+                                        <span class="text-xs text-gray-400">Advanced</span>
+                                    </div>
+                                    <div class="flex h-2 w-full">
+                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
+                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
+                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mb-1 flex items-center justify-between">
+                                        <span class="text-sm">Linux/UNIX Systems</span>
+                                        <span class="text-xs text-gray-400">Advanced</span>
+                                    </div>
+                                    <div class="flex h-2 w-full">
+                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
+                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
+                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="mb-1 flex items-center justify-between">
+                                        <span class="text-sm">Full-stack Web Development</span>
+                                        <span class="text-xs text-gray-400">Intermediate</span>
+                                    </div>
+                                    <div class="flex h-2 w-full">
+                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
+                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
+                                    </div>
+                                </div>
+                        </section>
+                    </div>
+                    <div class="md:col-span-2">
+                        <section class="mb-6">
+                            <h2 class="mb-4 text-2xl font-bold">Professional Experience</h2>
+                            <div class="space-y-6">
+                                <div>
+                                    <h3 class="text-xl font-bold">CEO & Infrastructure Lead</h3>
+                                    <p class="text-sm text-gray-400">
+                                        Minex Network | 2021 - 2022
+                                    </p>
+                                    <p class="mt-2 text-sm">System administration and infrastructure development.</p>
+                                    <ul class="mt-2 list-inside list-disc text-sm text-gray-400">
+                                        <li>Developed on-demand scaled servers with Kubernetes technologies</li>
+                                        <li>Created multitude of custom softwares for various use cases</li>
+                                        <li>Primary network infrastructure management.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <h2 class="mb-3 text-xl font-bold">Notable Projects</h2>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div class="project-card border border-gray-700 p-3">
+                                    <h3 class="mb-1 text-lg font-bold">ApiaryProxy</h3>
+                                    <p class="mb-2 text-sm text-gray-400">Modernized Velocity Fork for maximum performance.</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Minecraft</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Kotlin</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Java</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Proxy</span>
+                                    </div>
+                                </div>
+                                <div class="project-card border border-gray-700 p-3">
+                                    <h3 class="mb-1 text-lg font-bold">ApiaryMC</h3>
+                                    <p class="mb-2 text-sm text-gray-400">Performant Folia Fork with Bukkit support.</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Minecraft</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">MC Patches</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Folia</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Java</span>
+                                    </div>  
+                                </div>
+                                <div class="project-card border border-gray-700 p-3">
+                                    <h3 class="mb-1 text-lg font-bold">Earth</h3>
+                                    <p class="mb-2 text-sm text-gray-400">Unique Minecraft Kingdoms Gamemode. (Inspired by Civilizations)</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Minecraft</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">SpigotAPI</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Plugin</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Java</span>
+                                    </div>  
+                                </div>
+                                <div class="project-card border border-gray-700 p-3">
+                                    <h3 class="mb-1 text-lg font-bold">GP-Folia</h3>
+                                    <p class="mb-2 text-sm text-gray-400">GriefPrevention Ported to Folia. (Finally)</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Minecraft</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">BukkitAPI</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Plugin</span>
+                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Java</span>
+                                    </div>  
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-
-    <footer>
-        <p>Copyright © 2024 Sadat Sahib. All rights reserved.</p>
-    </footer>
+    <script src="index.js"></script>
 </body>
 </html>
