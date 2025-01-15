@@ -9,44 +9,38 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <style>
-         .screenshot-container {
-            display: inline-block;
-            margin-right: 5px;
-            margin-bottom: 5px;
+         /* Updated Styles */
+        .screenshot-container {
+            display: flex;
+            align-items: center;
+             gap: 15px;
+            margin-bottom: 15px;
             cursor: pointer;
-            text-align: center; /* Center content within the container */
-            width: calc(50% - 10px); /* Two containers per row with some gap */
-            max-width: 280px; /* Maximum width to align with the project card */
-             min-width: 200px;
-             padding: 10px;
-            box-sizing: border-box; /* Include padding in the width calculation */
-            border: 1px solid #444; /* Add border for better visibility */
-
+            padding: 10px;
+            border: 1px solid #444;
+             box-sizing: border-box;
         }
-         .screenshot-container img {
-             width: 100%;
-             height: auto;
-             border: 1px solid #444;
-             display: block;
-             margin: 0 auto;
+        .screenshot-container img {
+            max-width: 120px; /* Set the max width of images */
+            height: auto;
+            border: 1px solid #444;
+            display: block; /* Ensure image stays in place */
         }
 
         .screenshot-details {
-            margin-top: 10px;
-        }
+            flex: 1; /* Takes remaining space */
+         }
 
         .screenshot-title {
             font-size: 1.1em;
             font-weight: bold;
-             margin-bottom: 5px;
-         }
-
-         .screenshot-tags {
+            margin-bottom: 5px;
+        }
+       .screenshot-tags {
              display: flex;
              flex-wrap: wrap;
              gap: 5px;
-             justify-content: center; /* Center tags horizontally */
-         }
+           }
          .screenshot-tags span {
             border: 1px solid #444;
             padding: 2px 6px;
@@ -103,6 +97,70 @@
             text-decoration: none;
             cursor: pointer;
         }
+         /* Toggle Button Styles */
+        .toggle-container {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: flex-start;
+             gap: 10px;
+        }
+        .toggle-button {
+             background-color: #212529;
+            color: white;
+            border: 1px solid #444;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9em;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .toggle-button:hover, .toggle-button.active {
+            background-color: #495057;
+        }
+
+        #projects-section, #screenshots-section {
+            display: none;
+        }
+        #projects-section.active, #screenshots-section.active {
+             display: block;
+        }
+
+         .project-card {
+            border: 1px solid #444;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .project-card h3 {
+            font-size: 1.1em;
+            font-weight: bold;
+             margin-bottom: 5px;
+        }
+
+         .project-card .flex {
+            flex-wrap: wrap;
+         }
+        .project-card span {
+             border: 1px solid #444;
+            padding: 2px 6px;
+            font-size: 0.8em;
+        }
+        /* Responsive container sizing */
+         .container-wrapper {
+             width: 98%;
+             max-width: 1200px;
+          }
+
+         @media (min-width: 768px) {
+             .container-wrapper {
+                 width: 90%;
+             }
+             .screenshot-container {
+                 flex-direction: row; /* Keep as a row for larger screens */
+             }
+              .screenshot-container img{
+                  max-width: 180px;
+              }
+         }
     </style>
 </head>
 <body class="flex min-h-screen items-center justify-center bg-black p-2 font-mono text-white sm:p-4" style="font-family: 'JetBrains Mono', monospace;">
@@ -248,10 +306,14 @@
                                 </div>
                             </div>
                         </section>
-                        <section class="mb-6">
-                            <h2 class="mb-3 text-xl font-bold">Notable Projects</h2>
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                <div class="project-card border border-gray-700 p-3">
+                        <div class="toggle-container">
+                                <button class="toggle-button active" id="toggleProjects" onclick="toggleContent('projects')">Notable Projects</button>
+                                 <button class="toggle-button" id="toggleScreenshots" onclick="toggleContent('screenshots')">Screenshots</button>
+                         </div>
+                         <section id="projects-section" class="mb-6 active">
+                            <h2 class="mb-3 text-xl font-bold"></h2>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+                                <div class="project-card">
                                     <h3 class="mb-1 text-lg font-bold">ApiaryProxy</h3>
                                     <p class="mb-2 text-sm text-gray-400">Modernized Velocity Fork for maximum performance.</p>
                                     <div class="flex flex-wrap gap-2">
@@ -261,7 +323,7 @@
                                         <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Proxy</span>
                                     </div>
                                 </div>
-                                <div class="project-card border border-gray-700 p-3">
+                                <div class="project-card">
                                     <h3 class="mb-1 text-lg font-bold">ApiaryMC</h3>
                                     <p class="mb-2 text-sm text-gray-400">Performant Folia Fork with Bukkit support.</p>
                                     <div class="flex flex-wrap gap-2">
@@ -271,7 +333,7 @@
                                         <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Java</span>
                                     </div>
                                 </div>
-                                <div class="project-card border border-gray-700 p-3">
+                                <div class="project-card">
                                     <h3 class="mb-1 text-lg font-bold">Earth</h3>
                                     <p class="mb-2 text-sm text-gray-400">Unique Minecraft Kingdoms Gamemode. (Inspired by Civilizations)</p>
                                     <div class="flex flex-wrap gap-2">
@@ -281,7 +343,7 @@
                                         <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Java</span>
                                     </div>
                                 </div>
-                                <div class="project-card border border-gray-700 p-3">
+                                <div class="project-card">
                                     <h3 class="mb-1 text-lg font-bold">GP-Folia</h3>
                                     <p class="mb-2 text-sm text-gray-400">GriefPrevention Ported to Folia. (Finally)</p>
                                     <div class="flex flex-wrap gap-2">
@@ -293,9 +355,12 @@
                                 </div>
                             </div>
                         </section>
-                        <section>
-                            <h2 class="mb-3 text-xl font-bold">Screenshots <small class="text-gray-500">(Click to enlarge)</small></h2>
-                            <div class="flex flex-wrap">
+
+                        <section id="screenshots-section" class="mb-6">
+                             <h2 class="mb-3 text-xl font-bold">
+                                <small class="text-gray-500">(Click to enlarge)</small>
+                            </h2>
+                            <div class="flex flex-col">
                                  <div class="screenshot-container">
                                    <img src="ss1.png" alt="Screenshot 1" onclick="openModal('ss1.png')">
                                     <div class="screenshot-details">
@@ -397,6 +462,26 @@
         <img class="modal-content" id="expandedImg">
     </div>
     <script>
+         function toggleContent(section) {
+            const projectsSection = document.getElementById('projects-section');
+            const screenshotsSection = document.getElementById('screenshots-section');
+            const projectsButton = document.getElementById('toggleProjects');
+            const screenshotsButton = document.getElementById('toggleScreenshots');
+
+            if(section === 'projects') {
+               projectsSection.classList.add('active');
+               screenshotsSection.classList.remove('active');
+               projectsButton.classList.add('active');
+               screenshotsButton.classList.remove('active');
+            } else if(section === 'screenshots'){
+               screenshotsSection.classList.add('active');
+               projectsSection.classList.remove('active');
+               screenshotsButton.classList.add('active');
+               projectsButton.classList.remove('active');
+            }
+
+        }
+
         function openModal(imgUrl) {
             document.getElementById('expandedImg').src = imgUrl;
             document.getElementById('imageModal').style.display = "block";
