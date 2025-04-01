@@ -7,490 +7,783 @@
     <meta name="generator" content="Astro v4.16.7">
     <title>Sadat's Resume</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="index.css">
     <style>
-         /* Updated Styles */
-        .screenshot-container {
-            display: flex;
-            align-items: center;
-             gap: 15px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            padding: 10px;
-            border: 1px solid #444;
-             box-sizing: border-box;
+        /* Monochrome UI */
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #222222;
+            --text-color: #ffffff;
+            --text-secondary: #aaaaaa;
+            --border-color: rgba(255, 255, 255, 0.15);
+            --card-bg: rgba(15, 15, 15, 0.6);
+            --transition-speed: 0.3s;
         }
-        .screenshot-container img {
-            max-width: 120px; /* Set the max width of images */
-            height: auto;
-            border: 1px solid #444;
-            display: block; /* Ensure image stays in place */
+        
+        body {
+            background-color: #000;
+            color: var(--text-color);
+            font-family: 'JetBrains Mono', monospace;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        .screenshot-details {
-            flex: 1; /* Takes remaining space */
-         }
-
-        .screenshot-title {
-            font-size: 1.1em;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-       .screenshot-tags {
-             display: flex;
-             flex-wrap: wrap;
-             gap: 5px;
-           }
-         .screenshot-tags span {
-            border: 1px solid #444;
-            padding: 2px 6px;
-            font-size: 0.8em;
-         }
-
-        .modal {
-            display: none;
+        /* Noise effect */
+        body::before {
+            content: '';
             position: fixed;
-            z-index: 10;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .modal-content {
-            margin: auto;
-            display: block;
-            max-width: 90%;
-            max-height: 90%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .container-wrapper {
+            position: relative;
+            padding: 0;
+            width: 95%;
+            max-width: 1200px;
+            transition: all var(--transition-speed) ease;
+            margin: 40px auto;
+            z-index: 2;
         }
 
-        .modal-content {
-            animation-name: zoom;
-            animation-duration: 0.6s;
+        main {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            position: relative;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
         }
 
-        @keyframes zoom {
-            from {transform: scale(0)}
-            to {transform: scale(1)}
-        }
-
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
-         /* Toggle Button Styles */
-        .toggle-container {
-            margin-bottom: 10px;
+        /* Terminal window style */
+        .terminal-header {
+            background-color: #111;
+            padding: 8px 12px;
             display: flex;
-            justify-content: flex-start;
-             gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
         }
-        .toggle-button {
-             background-color: #212529;
+
+        .window-controls {
+            display: flex;
+            gap: 6px;
+            margin-right: 15px;
+        }
+
+        .control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .control::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .control:hover::after {
+            opacity: 1;
+        }
+
+        .terminal-title {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        /* Main content */
+        .terminal-content {
+            padding: 25px;
+        }
+
+        /* Typing effect line */
+        .command-line {
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .prompt {
+            color: #ddd;
+            margin-right: 10px;
+        }
+
+        .typed-text {
             color: white;
-            border: 1px solid #444;
-            padding: 8px 16px;
+            border-right: 2px solid transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite alternate;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: white }
+        }
+
+        /* Section styling */
+        .section {
+            margin-bottom: 30px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            position: relative;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 100%);
+        }
+
+        /* Skill bar */
+        .skill-bar {
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.05);
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-level {
+            height: 100%;
+            background-color: white;
+            position: relative;
+            width: 0;
+            transition: width 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+
+        .skill-level::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Project cards */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
+            height: 100%;
+            backdrop-filter: blur(5px);
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card h3 {
+            color: var(--text-color);
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 3px 8px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .project-card:hover .tech-tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Contact info */
+        .contact-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-info:hover {
+            transform: translateX(5px);
+        }
+
+        .contact-info i {
+            width: 16px;
+            margin-right: 12px;
+            color: white;
+        }
+
+        .contact-link {
+            color: var(--text-secondary);
+            transition: color var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .contact-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        .contact-link:hover {
+            color: white;
+        }
+
+        .contact-link:hover::after {
+            width: 100%;
+        }
+
+        /* Responsive improvements */
+        @media (min-width: 768px) {
+            .container-wrapper {
+                width: 90%;
+            }
+            
+            .project-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .terminal-content {
+                padding: 35px;
+            }
+        }
+
+        /* Particle effect */
+        .matrix-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.2;
+        }
+
+        /* Experience section */
+        .experience-item {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 25px;
+        }
+
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            background-color: white;
+        }
+
+        .experience-title {
+            margin-bottom: 5px;
+        }
+
+        .experience-company {
+            color: var(--text-secondary);
             font-size: 0.9em;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-        .toggle-button:hover, .toggle-button.active {
-            background-color: #495057;
-        }
-
-        #projects-section, #screenshots-section {
-            display: none;
-        }
-        #projects-section.active, #screenshots-section.active {
-             display: block;
-        }
-
-         .project-card {
-            border: 1px solid #444;
-            padding: 10px;
             margin-bottom: 10px;
         }
-        .project-card h3 {
-            font-size: 1.1em;
-            font-weight: bold;
-             margin-bottom: 5px;
+
+        .experience-desc {
+            margin-bottom: 10px;
         }
 
-         .project-card .flex {
-            flex-wrap: wrap;
-         }
-        .project-card span {
-             border: 1px solid #444;
-            padding: 2px 6px;
-            font-size: 0.8em;
+        ul.experience-points {
+            list-style: none;
+            padding-left: 0;
         }
-        /* Responsive container sizing */
-         .container-wrapper {
-             width: 98%;
-             max-width: 1200px;
-          }
 
-         @media (min-width: 768px) {
-             .container-wrapper {
-                 width: 90%;
-             }
-             .screenshot-container {
-                 flex-direction: row; /* Keep as a row for larger screens */
-             }
-              .screenshot-container img{
-                  max-width: 180px;
-              }
-         }
+        ul.experience-points li {
+            position: relative;
+            padding-left: 15px;
+            margin-bottom: 5px;
+            color: var(--text-secondary);
+        }
+
+        ul.experience-points li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: white;
+        }
+
+        /* Glitch effect */
+        .glitch-container {
+            position: relative;
+        }
+
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
+
+        .glitch.active::before {
+            animation: glitch-effect 0.4s cubic-bezier(.25, .46, .45, .94) both;
+            color: rgb(255,255,255);
+            clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%);
+            transform: translate(-3px, 0);
+            opacity: 0.8;
+        }
+
+        .glitch.active::after {
+            animation: glitch-effect 0.4s cubic-bezier(.25, .46, .45, .94) reverse both;
+            color: rgb(255,255,255);
+            clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+            transform: translate(3px, 0);
+            opacity: 0.8;
+        }
+
+        @keyframes glitch-effect {
+            0% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(-3px, 3px);
+            }
+            40% {
+                transform: translate(-3px, -3px);
+            }
+            60% {
+                transform: translate(3px, 3px);
+            }
+            80% {
+                transform: translate(3px, -3px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
     </style>
 </head>
-<body class="flex min-h-screen items-center justify-center bg-black p-2 font-mono text-white sm:p-4" style="font-family: 'JetBrains Mono', monospace;">
+<body>
+    <canvas id="matrixCanvas" class="matrix-effect"></canvas>
     <div class="container-wrapper">
-        <main class="relative w-full max-w-6xl border border-white p-4 text-xs sm:p-6 sm:text-sm">
-            <div class="absolute -top-3 left-2 bg-black px-2">
-                <span class="text-sm font-bold">Resume</span>
+        <main>
+            <div class="terminal-header">
+                <div class="window-controls">
+                    <div class="control"></div>
+                    <div class="control"></div>
+                    <div class="control"></div>
+                </div>
+                <div class="terminal-title">sadat@resume ~ bash</div>
             </div>
-            <div class="mt-2">
+            <div class="terminal-content">
+                <div class="command-line">
+                    <span class="prompt">$</span>
+                    <span class="typed-text">cat sadat_resume.md</span>
+                </div>
+
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
                     <div class="md:col-span-1">
-                        <header class="mb-6">
-                            <h1 class="mb-1 text-3xl font-bold">Sadat Sahib</h1>
+                        <section class="section" id="profileSection">
+                            <div class="glitch-container">
+                                <h1 class="text-3xl font-bold glitch" data-text="Sadat Sahib">Sadat Sahib</h1>
+                            </div>
                             <p class="text-sm text-gray-400">Java Dev. & Systems Engineer</p>
-                            <div class="mt-2 space-y-1 text-xs text-gray-500">
-                                <p>
-                                    <i class="fas fa-map-marker-alt inline-block w-4"></i> Barishal, BD
-                                </p>
-                                <p>
-                                    <i class="fas fa-envelope inline-block w-4"></i>
-                                    <a href="mailto:sahib.2009.sa@gmail.com" class="hover:text-white transition-colors">sahib.2009.sa@gmail.com</a>
-                                </p>
-                                <p>
-                                    <i class="fab fa-github inline-block w-4"></i>
-                                    <a href="https://github.com/ssquadteam" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">
+                            <div class="mt-4 space-y-2 text-xs text-gray-500">
+                                <div class="contact-info">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Barishal, BD</span>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="fas fa-envelope"></i>
+                                    <a href="mailto:sahib.2009.sa@gmail.com" class="contact-link">sahib.2009.sa@gmail.com</a>
+                                </div>
+                                <div class="contact-info">
+                                    <i class="fab fa-github"></i>
+                                    <a href="https://github.com/ssquadteam" target="_blank" rel="noopener noreferrer" class="contact-link">
                                         github.com/ssquadteam
                                     </a>
-                                </p>
+                                </div>
                             </div>
-                        </header>
-                        <section>
-                            <h2 class="mb-3 text-xl font-bold">Technical Expertise</h2>
-                            <div class="space-y-2">
+                        </section>
+                        <section class="section" id="skillsSection">
+                            <h2 class="section-header text-xl font-bold">Technical Expertise</h2>
+                            <div class="space-y-4">
                                 <div>
-                                    <div class="mb-1 flex items-center justify-between">
+                                    <div class="flex items-center justify-between">
                                         <span class="text-sm">Docker/Kubernetes</span>
                                         <span class="text-xs text-gray-400">Expert</span>
                                     </div>
-                                    <div class="flex h-2 w-full">
-                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
-                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
-                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
-                                        <div class="h-full w-1/4" style="background-color: #dee2e6"></div>
+                                    <div class="skill-bar">
+                                        <div class="skill-level" data-width="100%"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="mb-1 flex items-center justify-between">
+                                    <div class="flex items-center justify-between">
                                         <span class="text-sm">JVM Languages</span>
                                         <span class="text-xs text-gray-400">Expert</span>
                                     </div>
-                                    <div class="flex h-2 w-full">
-                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
-                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
-                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
-                                        <div class="h-full w-1/4" style="background-color: #dee2e6"></div>
+                                    <div class="skill-bar">
+                                        <div class="skill-level" data-width="100%"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="mb-1 flex items-center justify-between">
+                                    <div class="flex items-center justify-between">
                                         <span class="text-sm">C++/C#/C</span>
                                         <span class="text-xs text-gray-400">Expert</span>
                                     </div>
-                                    <div class="flex h-2 w-full">
-                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
-                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
-                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
-                                        <div class="h-full w-1/4" style="background-color: #dee2e6"></div>
+                                    <div class="skill-bar">
+                                        <div class="skill-level" data-width="100%"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="mb-1 flex items-center justify-between">
+                                    <div class="flex items-center justify-between">
                                         <span class="text-sm">Network Security</span>
                                         <span class="text-xs text-gray-400">Expert</span>
                                     </div>
-                                    <div class="flex h-2 w-full">
-                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
-                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
-                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
-                                        <div class="h-full w-1/4" style="background-color: #dee2e6"></div>
+                                    <div class="skill-bar">
+                                        <div class="skill-level" data-width="100%"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="mb-1 flex items-center justify-between">
+                                    <div class="flex items-center justify-between">
                                         <span class="text-sm">Unreal Engine</span>
                                         <span class="text-xs text-gray-400">Expert</span>
                                     </div>
-                                    <div class="flex h-2 w-full">
-                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
-                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
-                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
-                                        <div class="h-full w-1/4" style="background-color: #dee2e6"></div>
+                                    <div class="skill-bar">
+                                        <div class="skill-level" data-width="100%"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="mb-1 flex items-center justify-between">
+                                    <div class="flex items-center justify-between">
                                         <span class="text-sm">MySQL, MariaDB, MongoDB</span>
                                         <span class="text-xs text-gray-400">Advanced</span>
                                     </div>
-                                    <div class="flex h-2 w-full">
-                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
-                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
-                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
+                                    <div class="skill-bar">
+                                        <div class="skill-level" data-width="75%"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="mb-1 flex items-center justify-between">
+                                    <div class="flex items-center justify-between">
                                         <span class="text-sm">Linux/UNIX Systems</span>
                                         <span class="text-xs text-gray-400">Advanced</span>
                                     </div>
-                                    <div class="flex h-2 w-full">
-                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
-                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
-                                        <div class="h-full w-1/4" style="background-color: #adb5bd"></div>
+                                    <div class="skill-bar">
+                                        <div class="skill-level" data-width="75%"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="mb-1 flex items-center justify-between">
+                                    <div class="flex items-center justify-between">
                                         <span class="text-sm">Full-stack Web Development</span>
-                                        <span class="text-xs text-gray-400">Intermediate</span>
+                                        <span class="text-xs text-gray-400">Advanced</span>
                                     </div>
-                                    <div class="flex h-2 w-full">
-                                        <div class="h-full w-1/4" style="background-color: #212529"></div>
-                                        <div class="h-full w-1/4" style="background-color: #495057"></div>
+                                    <div class="skill-bar">
+                                        <div class="skill-level" data-width="75%"></div>
                                     </div>
                                 </div>
+                            </div>
                         </section>
                     </div>
                     <div class="md:col-span-2">
-                        <section class="mb-6">
-                            <h2 class="mb-4 text-2xl font-bold">Professional Experience</h2>
-                            <div class="space-y-6">
-                                <div>
-                                    <h3 class="text-xl font-bold">CEO & Infrastructure Lead</h3>
-                                    <p class="text-sm text-gray-400">
-                                        Minex Network | 2021 - 2022
-                                    </p>
-                                    <p class="mt-2 text-sm">System administration and infrastructure development.</p>
-                                    <ul class="mt-2 list-inside list-disc text-sm text-gray-400">
-                                        <li>Developed on-demand scaled servers with Kubernetes technologies</li>
-                                        <li>Created multitude of custom softwares for various use cases</li>
-                                        <li>Primary network infrastructure management.</li>
-                                    </ul>
-                                </div>
+                        <section class="section" id="experienceSection">
+                            <h2 class="section-header text-2xl font-bold">Professional Experience</h2>
+                            <div class="experience-item">
+                                <h3 class="experience-title text-xl font-bold">CEO & Infrastructure Lead</h3>
+                                <p class="experience-company">
+                                    Minex Network | 2021 - 2022
+                                </p>
+                                <p class="experience-desc text-sm">System administration and infrastructure development.</p>
+                                <ul class="experience-points text-sm">
+                                    <li>Developed on-demand scaled servers with Kubernetes technologies</li>
+                                    <li>Created multitude of custom softwares for various use cases</li>
+                                    <li>Primary network infrastructure management.</li>
+                                </ul>
                             </div>
                         </section>
-                        <div class="toggle-container">
-                                <button class="toggle-button active" id="toggleProjects" onclick="toggleContent('projects')">Notable Projects</button>
-                                 <button class="toggle-button" id="toggleScreenshots" onclick="toggleContent('screenshots')">Screenshots</button>
-                         </div>
-                         <section id="projects-section" class="mb-6 active">
-                            <h2 class="mb-3 text-xl font-bold"></h2>
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
-                                <div class="project-card">
-                                    <h3 class="mb-1 text-lg font-bold">ApiaryProxy</h3>
-                                    <p class="mb-2 text-sm text-gray-400">Modernized Velocity Fork for maximum performance.</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Minecraft</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Kotlin</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Java</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Proxy</span>
+                        
+                        <section class="section" id="projectsSection">
+                            <h2 class="section-header text-2xl font-bold">Notable Projects</h2>
+                            <div class="project-grid">
+                                <a href="https://github.com/ssquadteam/ApiaryProxy" class="project-card" target="_blank" rel="noopener noreferrer">
+                                    <h3 class="text-lg font-bold">ApiaryProxy</h3>
+                                    <p class="mb-3 text-sm text-gray-400">Modernized Velocity Fork for maximum performance.</p>
+                                    <div class="flex flex-wrap">
+                                        <span class="tech-tag">Minecraft</span>
+                                        <span class="tech-tag">Kotlin</span>
+                                        <span class="tech-tag">Java</span>
+                                        <span class="tech-tag">Proxy</span>
                                     </div>
-                                </div>
-                                <div class="project-card">
-                                    <h3 class="mb-1 text-lg font-bold">ApiaryMC</h3>
-                                    <p class="mb-2 text-sm text-gray-400">Performant Folia Fork with Bukkit support.</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Minecraft</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">MC Patches</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Folia</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Java</span>
+                                </a>
+                                <a href="https://github.com/ssquadteam/ApiaryMC" class="project-card" target="_blank" rel="noopener noreferrer">
+                                    <h3 class="text-lg font-bold">ApiaryMC</h3>
+                                    <p class="mb-3 text-sm text-gray-400">Performant Folia Fork with Bukkit support.</p>
+                                    <div class="flex flex-wrap">
+                                        <span class="tech-tag">Minecraft</span>
+                                        <span class="tech-tag">MC Patches</span>
+                                        <span class="tech-tag">Folia</span>
+                                        <span class="tech-tag">Java</span>
                                     </div>
-                                </div>
-                                <div class="project-card">
-                                    <h3 class="mb-1 text-lg font-bold">Earth</h3>
-                                    <p class="mb-2 text-sm text-gray-400">Unique Minecraft Kingdoms Gamemode. (Inspired by Civilizations)</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Minecraft</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">SpigotAPI</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Plugin</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Java</span>
+                                </a>
+                                <a href="https://github.com/ssquadteam/Earth" class="project-card" target="_blank" rel="noopener noreferrer">
+                                    <h3 class="text-lg font-bold">Earth</h3>
+                                    <p class="mb-3 text-sm text-gray-400">Unique Minecraft Kingdoms Gamemode. (Inspired by Civilizations)</p>
+                                    <div class="flex flex-wrap">
+                                        <span class="tech-tag">Minecraft</span>
+                                        <span class="tech-tag">SpigotAPI</span>
+                                        <span class="tech-tag">Plugin</span>
+                                        <span class="tech-tag">Java</span>
                                     </div>
-                                </div>
-                                <div class="project-card">
-                                    <h3 class="mb-1 text-lg font-bold">GP-Folia</h3>
-                                    <p class="mb-2 text-sm text-gray-400">GriefPrevention Ported to Folia. (Finally)</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Minecraft</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">BukkitAPI</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Plugin</span>
-                                        <span class="border border-gray-600 px-2 py-1 text-xs text-gray-300">Java</span>
+                                </a>
+                                <a href="https://github.com/ssquadteam/GriefPrevention-Folia" class="project-card" target="_blank" rel="noopener noreferrer">
+                                    <h3 class="text-lg font-bold">GP-Folia</h3>
+                                    <p class="mb-3 text-sm text-gray-400">GriefPrevention Ported to Folia. (Finally)</p>
+                                    <div class="flex flex-wrap">
+                                        <span class="tech-tag">Minecraft</span>
+                                        <span class="tech-tag">BukkitAPI</span>
+                                        <span class="tech-tag">Plugin</span>
+                                        <span class="tech-tag">Java</span>
                                     </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section id="screenshots-section" class="mb-6">
-                             <h2 class="mb-3 text-xl font-bold">
-                                <small class="text-gray-500">(Click to enlarge)</small>
-                            </h2>
-                            <div class="flex flex-col">
-                                 <div class="screenshot-container">
-                                   <img src="ss1.png" alt="Screenshot 1" onclick="openModal('ss1.png')">
-                                    <div class="screenshot-details">
-                                       <div class="screenshot-title">Project 1</div>
-                                        <div class="screenshot-tags">
-                                           <span>Management</span>
-                                           <span>MegaHive</span>
-                                           <span>SMP</span>
-                                        </div>
-                                     </div>
-                                </div>
-                                <div class="screenshot-container">
-                                 <img src="ss2.png" alt="Screenshot 2" onclick="openModal('ss2.png')">
-                                    <div class="screenshot-details">
-                                       <div class="screenshot-title">Project 2</div>
-                                       <div class="screenshot-tags">
-                                           <span>Developer</span>
-                                           <span>MegaHive</span>
-                                           <span>SMP</span>
-                                       </div>
-                                   </div>
-                                </div>
-                                <div class="screenshot-container">
-                                 <img src="ss3.png" alt="Screenshot 3" onclick="openModal('ss3.png')">
-                                    <div class="screenshot-details">
-                                        <div class="screenshot-title">Snippet 1</div>
-                                        <div class="screenshot-tags">
-                                            <span>MegaHive</span>
-                                           <span>Textures</span>
-                                          <span>Oraxen</span>
-                                        </div>
-                                   </div>
-                                </div>
-                                <div class="screenshot-container">
-                                 <img src="ss4.png" alt="Screenshot 4" onclick="openModal('ss4.png')">
-                                    <div class="screenshot-details">
-                                        <div class="screenshot-title">Snippet 2</div>
-                                        <div class="screenshot-tags">
-                                            <span>MegaHive</span>
-                                           <span>Warp Menu</span>
-                                          <span>DeluxeMenu</span>
-                                        </div>
-                                   </div>
-                                </div>
-                                <div class="screenshot-container">
-                                 <img src="ss5.png" alt="Screenshot 5" onclick="openModal('ss5.png')">
-                                    <div class="screenshot-details">
-                                        <div class="screenshot-title">Snippet 3</div>
-                                        <div class="screenshot-tags">
-                                            <span>WalnutSMP</span>
-                                           <span>Multi-currency Shop</span>
-                                          <span>zShop + CoinsEngine</span>
-                                          <span>Inspired by DonutSMP Shop</span>
-                                        </div>
-                                   </div>
-                                </div>
-                                <div class="screenshot-container">
-                                 <img src="ss6.png" alt="Screenshot 6" onclick="openModal('ss6.png')">
-                                    <div class="screenshot-details">
-                                        <div class="screenshot-title">Snippet 4</div>
-                                        <div class="screenshot-tags">
-                                            <span>WalnutSMP</span>
-                                           <span>Scoreboard</span>
-                                          <span>TAB by NEZNAMY</span>
-                                        </div>
-                                   </div>
-                                </div>
-                                <div class="screenshot-container">
-                                 <img src="ss7.png" alt="Screenshot 7" onclick="openModal('ss7.png')">
-                                    <div class="screenshot-details">
-                                        <div class="screenshot-title">Snippet 5</div>
-                                        <div class="screenshot-tags">
-                                            <span>MegaHive</span>
-                                           <span>Server Hologram</span>
-                                          <span>FutureHolograms</span>
-                                        </div>
-                                   </div>
-                                </div>
-                                <div class="screenshot-container">
-                                 <img src="ss8.png" alt="Screenshot 8" onclick="openModal('ss8.png')">
-                                    <div class="screenshot-details">
-                                        <div class="screenshot-title">Snippet 6</div>
-                                        <div class="screenshot-tags">
-                                            <span>MegaHive</span>
-                                           <span>Daily Rewards</span>
-                                          <span>DeluxeMenus + Rewards</span>
-                                        </div>
-                                   </div>
-                                </div>
+                                </a>
                             </div>
                         </section>
                     </div>
                 </div>
+                
+                <div class="command-line" style="margin-top: 40px;">
+                    <span class="prompt">$</span>
+                    <span class="typed-text">_</span>
+                </div>
             </div>
         </main>
     </div>
-    <div id="imageModal" class="modal">
-        <span class="close" onclick="closeModal()">×</span>
-        <img class="modal-content" id="expandedImg">
-    </div>
+    
     <script>
-         function toggleContent(section) {
-            const projectsSection = document.getElementById('projects-section');
-            const screenshotsSection = document.getElementById('screenshots-section');
-            const projectsButton = document.getElementById('toggleProjects');
-            const screenshotsButton = document.getElementById('toggleScreenshots');
-
-            if(section === 'projects') {
-               projectsSection.classList.add('active');
-               screenshotsSection.classList.remove('active');
-               projectsButton.classList.add('active');
-               screenshotsButton.classList.remove('active');
-            } else if(section === 'screenshots'){
-               screenshotsSection.classList.add('active');
-               projectsSection.classList.remove('active');
-               screenshotsButton.classList.add('active');
-               projectsButton.classList.remove('active');
+        // Matrix effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Characters to display
+            const chars = '01'.split('');
+            
+            // Font settings
+            const fontSize = 10;
+            const columns = Math.floor(canvas.width / fontSize);
+            
+            // Initialize drops at random positions
+            const drops = Array(columns).fill().map(() => Math.floor(Math.random() * canvas.height));
+            
+            function draw() {
+                // Semi-transparent black background to show trail
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `${fontSize}px monospace`;
+                
+                // Loop through drops
+                for (let i = 0; i < drops.length; i++) {
+                    // Random character
+                    const char = chars[Math.floor(Math.random() * chars.length)];
+                    // Draw character
+                    ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+                    
+                    // Move drop and reset when it reaches bottom
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
             }
-
+            
+            // Animation loop
+            setInterval(draw, 35);
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        });
+        
+        // Animate sections on scroll
+        function animateSections() {
+            const sections = document.querySelectorAll('.section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
         }
-
-        function openModal(imgUrl) {
-            document.getElementById('expandedImg').src = imgUrl;
-            document.getElementById('imageModal').style.display = "block";
+        
+        // Animate skill bars
+        function animateSkillBars() {
+            const skillLevels = document.querySelectorAll('.skill-level');
+            
+            setTimeout(() => {
+                skillLevels.forEach(skill => {
+                    const width = skill.getAttribute('data-width');
+                    skill.style.width = width;
+                });
+            }, 600);
         }
-
-        function closeModal() {
-            document.getElementById('imageModal').style.display = "none";
+        
+        // Glitch effect on hover
+        function setupGlitchEffect() {
+            const glitchElements = document.querySelectorAll('.glitch');
+            
+            glitchElements.forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    this.classList.add('active');
+                    setTimeout(() => {
+                        this.classList.remove('active');
+                    }, 400);
+                });
+                
+                // Also trigger occasionally
+                setInterval(() => {
+                    if (Math.random() > 0.95) {
+                        element.classList.add('active');
+                        setTimeout(() => {
+                            element.classList.remove('active');
+                        }, 400);
+                    }
+                }, 3000);
+            });
         }
+        
+        // Project card hover effect
+        function setupProjectHoverEffects() {
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            projectCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    const h3 = this.querySelector('h3');
+                    if (h3 && !h3.classList.contains('glitch')) {
+                        h3.classList.add('glitch');
+                        h3.setAttribute('data-text', h3.textContent);
+                    }
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    const h3 = this.querySelector('h3');
+                    if (h3) {
+                        h3.classList.remove('active');
+                    }
+                });
+                
+                // Clicking is now handled by the anchor tag
+            });
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            animateSections();
+            animateSkillBars();
+            setupGlitchEffect();
+            setupProjectHoverEffects();
+            
+            // Make first section visible immediately
+            setTimeout(() => {
+                document.getElementById('profileSection').classList.add('visible');
+            }, 100);
+        });
     </script>
-    <script src="index.js"></script>
 </body>
 </html>
