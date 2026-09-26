@@ -11,8 +11,8 @@ export const profile = {
 export const hotbar = [
   { icon: "kotlin", name: "Kotlin", note: "My go-to. TaleLib, HytaleBridgeMod and most of my recent work are Kotlin." },
   { icon: "java", name: "Java", note: "Plugins, Folia/Paper forks, Velocity proxies. 50+ plugin codebase at Hyping." },
+  { icon: "fabric", name: "Fabric", note: "Server-side mods and a shared library for a large multi-instance Cobblemon network." },
   { icon: "plane", name: "Paper / Folia", note: "Server internals: patching Folia forks, regionised threading, Bukkit compat." },
-  { icon: "go", name: "Go", note: "CLI tools and infra services, including a fork of Pterodactyl's Wings daemon." },
   { icon: "cpp", name: "C / C++", note: "Native code for the performance-critical parts the JVM can't reach." },
   { icon: "rust", name: "Rust", note: "Built a Cobblemon addon that calls a Rust battle bot over JNI for smarter, more advanced bot decisions." },
   { icon: "docker", name: "Docker / K8s", note: "Horizontally scaled, on-demand game servers on Kubernetes since 2021." },
@@ -48,6 +48,16 @@ export const jobs: Job[] = [
     pixelLogo: true,
     from: "2026",
     summary: "Maintaining and optimizing the network's existing codebase.",
+  },
+  {
+    role: "Fabric Developer",
+    org: "SmashMC",
+    url: "https://www.smashmc.co/",
+    logo: "/logos/smashmc.webp",
+    from: "2025",
+    to: "2026",
+    summary:
+      "Maintained 20+ custom mods and developed the server's Fabric library for a large, multi-instance Cobblemon network. Also built resource pack content with Filament.",
   },
   {
     role: "Java Developer",
