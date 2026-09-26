@@ -1,0 +1,16 @@
+{
+  "name": "cxv7-portfolio",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/pixelify-sans": "^5.3.0",
+    "@fontsource/silkscreen": "^5.3.0",
+    "astro": "^7.3.5"
+  }
+}

@@ -1,0 +1,14 @@
+---
+import sizes from "../icons.json";
+
+interface Props {
+  name: keyof typeof sizes;
+  scale?: number;
+}
+const { name, scale = 2 } = Astro.props;
+const [w, h] = sizes[name];
+---
+
+<span class="icon" style={`--box:${18 * scale}px`}>
+  <img class="px" src={`/icons/${name}.png`} width={w * scale} height={h * scale} alt="" />
+</span>

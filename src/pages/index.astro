@@ -1,0 +1,354 @@
+---
+import "@fontsource/silkscreen/400.css";
+import "@fontsource/pixelify-sans/400.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "../styles/global.css";
+import Icon from "../components/Icon.astro";
+import { profile, hotbar, jobs, press, feats, shoutouts, featured, more, type Project } from "../data";
+
+async function gh(path: string) {
+  try {
+    const res = await fetch(`https://api.github.com/${path}`, { headers: { "User-Agent": "cxv7-portfolio" } });
+    return res.ok ? await res.json() : null;
+  } catch {
+    return null;
+  }
+}
+const live = async (p: Project) => ({ ...p, stars: (await gh(`repos/ssquadteam/${p.repo}`))?.stargazers_count ?? p.stars });
+const [top, rest, user] = await Promise.all([Promise.all(featured.map(live)), Promise.all(more.map(live)), gh("users/ssquadteam")]);
+const repoCount: number = user?.public_repos ?? 87;
+
+const articles = Object.values(press);
+const shownPress = 6;
+const outletsFor = (keys: (keyof typeof press)[]) => keys.map((k) => press[k]!);
+
+const nav = [
+  ["about", "About"],
+  ["experience", "Experience"],
+  ["achievements", "Achievements"],
+  ["press", "Press"],
+  ["projects", "Projects"],
+  ["contact", "Contact"],
+];
+
+const stars = [
+  ["6%", "12%", "0s"], ["18%", "34%", "1.1s"], ["10%", "58%", "0.4s"], ["26%", "8%", "1.7s"],
+  ["72%", "46%", "0.8s"], ["88%", "60%", "2s"], ["62%", "8%", "0.2s"], ["80%", "38%", "1.4s"],
+];
+const title = "Sadat Sahib (cxv7) · Java & Kotlin developer";
+const description =
+  "Sadat Sahib, aka cxv7 / SSquadTeam. Java & Kotlin developer from Bangladesh building Minecraft & Hytale server software: proxies, Paper forks and the Minecraft ⇄ Hytale crossplay.";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0f0c1b" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <script is:inline>document.documentElement.classList.add("js");</script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="nav">
+      <div class="wrap">
+        <a class="brand" href="#top"><img class="px" src="/favicon.png" width="40" height="40" alt="" />cxv7</a>
+        <button class="btn nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <nav class="nav-links" id="nav-links" aria-label="Sections">
+          {nav.map(([id, label]) => <a href={`#${id}`}>{label}</a>)}
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="wrap">
+          <div>
+            <p class="status">{profile.location}</p>
+            <h1>Sadat Sahib</h1>
+            <p class="aka">aka <b>cxv7</b> / <b>SSquadTeam</b></p>
+            <p class="lede">
+              Java &amp; Kotlin developer. I build Minecraft and Hytale server software: proxies, Paper forks, and mods
+              that make games do things they were never meant to.
+            </p>
+            <div class="cta">
+              <a class="btn btn-primary" href="#achievements">See what I've built</a>
+              <a class="btn" href={profile.github} rel="me">GitHub ↗</a>
+            </div>
+          </div>
+
+          <div class="stage pixel" role="group" aria-label="Pixel art of my Minecraft skin, cxv7">
+            {stars.map(([x, y, d]) => <span class="star" style={`--x:${x};--y:${y};--d:${d}`} aria-hidden="true"></span>)}
+            <img class="moon px" src="/sprites/moon.png" alt="" />
+            <div class="ground"></div>
+            <div class="actor">
+              <span class="nametag">cxv7</span>
+              <button class="avatar" data-view="front" aria-label="Wave hello"></button>
+            </div>
+            <div class="stage-ui">
+              <button class="btn" data-turn="-1" aria-label="Turn left">◀</button>
+              <span class="stage-hint">click me · turn me</span>
+              <button class="btn" data-turn="1" aria-label="Turn right">▶</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="about">
+        <div class="wrap">
+          <div class="head" data-reveal><Icon name="chest" scale={3} /><h2>About</h2></div>
+          <div class="about-grid">
+            <div data-reveal>
+              <p>
+                I'm Sadat, a developer from Dhaka who has been running and building game servers since 2021. Most of my
+                work sits below the gameplay: proxies, server forks, plugin frameworks and the infrastructure they run on.
+              </p>
+              <p>
+                In January 2026, a week after Hytale launched, I got it talking to Minecraft, running Windows 95, and
+                running itself. That got picked up by IGN, PC Gamer, Dexerto and a lot more.
+              </p>
+            </div>
+            <div class="stats" data-reveal>
+              <div class="stat pixel"><b>2021</b><span>running servers since</span></div>
+              <div class="stat pixel"><b>5</b><span>teams worked with</span></div>
+              <div class="stat pixel"><b>{repoCount}</b><span>public repos</span></div>
+              <div class="stat pixel"><b>{articles.length}</b><span>press articles</span></div>
+            </div>
+          </div>
+
+          <div class="hotbar-wrap" data-reveal>
+            <p class="hotbar-label">// my hotbar. click a slot or press 1–9</p>
+            <div class="hotbar" role="tablist" aria-label="Tech stack">
+              {
+                hotbar.map((h, i) => (
+                  <button
+                    class="slot"
+                    role="tab"
+                    aria-selected={i === 0 ? "true" : "false"}
+                    aria-controls="hotbar-info"
+                    aria-label={h.name}
+                    data-name={h.name}
+                    data-note={h.note}
+                  >
+                    <span class="n">{i + 1}</span>
+                    <Icon name={h.icon as any} />
+                  </button>
+                ))
+              }
+            </div>
+            <p class="hotbar-info" id="hotbar-info" role="tabpanel" aria-live="polite">
+              <b>{hotbar[0]!.name}</b><span>{hotbar[0]!.note}</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="experience">
+        <div class="wrap">
+          <div class="head" data-reveal><Icon name="sword" scale={3} /><h2>Experience</h2></div>
+          <p class="sub" data-reveal>Where I've shipped code, newest first.</p>
+          <ol class="timeline">
+            {
+              jobs.map((j) => (
+                <li class="job" data-reveal>
+                  <div class="logo-frame pixel">
+                    <img class:list={{ px: j.pixelLogo }} src={j.logo} alt={`${j.org} logo`} loading="lazy" />
+                  </div>
+                  <div class="job-body pixel">
+                    <div class="job-top">
+                      <h3>
+                        {j.role}
+                      </h3>
+                      <span class="years">
+                        {j.to ? `${j.from} – ${j.to}` : j.from}
+                      </span>
+                    </div>
+                    <p class="org">{j.url ? <a href={j.url}>{j.org} ↗</a> : j.org}</p>
+                    <p>{j.summary}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </section>
+
+      <section class="block" id="achievements">
+        <div class="wrap">
+          <div class="head" data-reveal><Icon name="trophy" scale={3} /><h2>Technical Achievements</h2></div>
+          <p class="sub" data-reveal>
+            Hytale entered early access on January 13, 2026. Its server is plain Java, so I started making it do things
+            nobody planned for.
+          </p>
+          <div class="feats">
+            {
+              feats.map((f) => (
+                <article class="feat pixel" data-reveal>
+                  <div class="feat-top">
+                    <Icon name={f.icon as any} />
+                    <div>
+                      <span class="unlocked">Achievement unlocked</span>
+                      <h3>{f.title}</h3>
+                      <span class="when">{f.when}</span>
+                    </div>
+                  </div>
+                  <p>{f.body}</p>
+                  <ul class="facts">
+                    {f.facts.map((x) => (
+                      <li class="tag">{x}</li>
+                    ))}
+                  </ul>
+                  <div class="feat-foot">
+                    <span>covered by</span>
+                    {outletsFor(f.coverage).map((a) => (
+                      <a href={a.url} title={a.title}>
+                        {a.outlet}
+                      </a>
+                    ))}
+                    {f.repo && (
+                      <a href={f.repo} style="margin-left:auto">
+                        source ↗
+                      </a>
+                    )}
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+
+          <div class="chat" data-reveal aria-label="Reactions">
+            {
+              shoutouts.map((s) => (
+                <a class="chat-line" href={s.url}>
+                  <span class="who">&lt;{s.who}&gt;</span> {s.quote}
+                  <span class="role">{s.role} · on X</span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="press">
+        <div class="wrap">
+          <div class="head" data-reveal><Icon name="news" scale={3} /><h2>In the Press</h2></div>
+          <p class="sub" data-reveal>What gaming and tech outlets wrote about the Hytale experiments.</p>
+          <ul class="press" data-reveal>
+            {
+              articles.slice(0, shownPress).map((a) => (
+                <li>
+                  <a href={a.url}>
+                    <span class="outlet">{a.outlet}</span>
+                    <span class="headline">{a.title}</span>
+                    <time>{a.date}</time>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <details class="more-press">
+            <summary class="btn">
+              <span class="open-label">Show {articles.length - shownPress} more</span><span class="close-label">Show less</span>
+            </summary>
+            <ul class="press" style="border-top:0">
+              {
+                articles.slice(shownPress).map((a) => (
+                  <li>
+                    <a href={a.url}>
+                      <span class="outlet">{a.outlet}</span>
+                      <span class="headline">{a.title}</span>
+                      <time>{a.date}</time>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </details>
+        </div>
+      </section>
+
+      <section class="block" id="projects">
+        <div class="wrap">
+          <div class="head" data-reveal><Icon name="chest" scale={3} /><h2>Projects</h2></div>
+          <p class="sub" data-reveal>Open source, all on GitHub.</p>
+          <div class="projects">
+            {
+              top.map((p) => (
+                <a class="project pixel" href={`${profile.github}/${p.repo}`} data-reveal>
+                  <div class="project-top">
+                    <Icon name={p.icon as any} scale={3} />
+                    <span class="meta">
+                      <span class="lang" data-lang={p.lang}>
+                        {p.lang}
+                      </span>
+                      <span class="star-count">★ {p.stars}</span>
+                    </span>
+                  </div>
+                  <h3>{p.repo}</h3>
+                  <p>{p.blurb}</p>
+                  {p.points && (
+                    <ul>
+                      {p.points.map((x) => (
+                        <li>{x}</li>
+                      ))}
+                    </ul>
+                  )}
+                  <span class="go">View repo ↗</span>
+                </a>
+              ))
+            }
+          </div>
+
+          <div class="workshop" data-reveal>
+            <h3>More from the workshop</h3>
+            <ul class="mini">
+              {
+                rest.map((p) => (
+                  <li>
+                    <a href={`${profile.github}/${p.repo}`}>
+                      <Icon name={p.icon as any} />
+                      <b>
+                        {p.repo}
+                        <small>★ {p.stars}</small>
+                      </b>
+                      <span>{p.blurb}</span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="block contact" id="contact">
+        <div class="wrap">
+          <div class="head" data-reveal><Icon name="mail" scale={3} /><h2>Say hi</h2></div>
+          <p class="sub" data-reveal>Got a server that needs building, fixing or making faster? Discord is the quickest way to reach me.</p>
+          <div class="links" data-reveal>
+            <button class="btn btn-primary" data-copy={profile.discord}>Discord: {profile.discord} ⧉</button>
+            <a class="btn" href={profile.github} rel="me">GitHub ↗</a>
+            <a class="btn" href={profile.x} rel="me">X ↗</a>
+            <a class="btn" href={`mailto:${profile.email}`}>Email</a>
+          </div>
+          <span class="copied" aria-live="polite"></span>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© {new Date().getFullYear()} Sadat Sahib</p>
+    </footer>
+
+    <script>
+      import "../scripts/main.ts";
+    </script>
+  </body>
+</html>
