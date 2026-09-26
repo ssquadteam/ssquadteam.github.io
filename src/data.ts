@@ -57,7 +57,7 @@ export const jobs: Job[] = [
     from: "2025",
     to: "2026",
     summary:
-      "Maintained 20+ custom mods and a custom library for a large, multi-instance Cobblemon network. Also built resource pack content with Filament.",
+      "Maintained 20+ custom mods and a custom library for a large, multi-instance Cobblemon network.",
   },
   {
     role: "Java Developer",
