@@ -84,7 +84,7 @@ export const jobs: Job[] = [
     from: "2021",
     to: "2022",
     summary:
-      "System administration and infrastructure development. Built on-demand, horizontally scaled servers with Kubernetes.",
+      "System administration and infrastructure development. Built on-demand, horizontally scaled servers.",
   },
 ];
 
