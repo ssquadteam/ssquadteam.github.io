@@ -28,7 +28,6 @@ export type Job = {
   from: string;
   to?: string;
   summary: string;
-  pixelLogo?: boolean;
 };
 
 export const jobs: Job[] = [
@@ -39,15 +38,6 @@ export const jobs: Job[] = [
     logo: "/logos/unstablepvp.webp",
     from: "2026",
     summary: "Building a big Kotlin codebase from the ground up, and keeping it running.",
-  },
-  {
-    role: "Java Developer",
-    org: "Unstable Network",
-    url: "https://store.unstable.sh/",
-    logo: "/logos/unstable.png",
-    pixelLogo: true,
-    from: "2026",
-    summary: "Maintaining and optimizing the network's existing codebase.",
   },
   {
     role: "Fabric Developer",
