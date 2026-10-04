@@ -13,7 +13,7 @@ export const hotbar = [
   { icon: "java", name: "Java", note: "Plugins, Folia/Paper forks, Velocity proxies. 50+ plugin codebase at Hyping." },
   { icon: "fabric", name: "Fabric", note: "Server-side mods and a shared library for a large multi-instance Cobblemon network." },
   { icon: "plane", name: "Paper / Folia", note: "Server internals: patching Folia forks, regionised threading, Bukkit compat." },
-  { icon: "cpp", name: "C / C++", note: "Native code for the performance-critical parts the JVM can't reach." },
+  { icon: "hytale", name: "Hytale", note: "Server mods and plugins since launch: crossplay, Windows 95, DOOM, and mods I maintain at 6b6t." },
   { icon: "rust", name: "Rust", note: "Built a Cobblemon addon that calls a Rust battle bot over JNI for smarter, more advanced bot decisions." },
   { icon: "docker", name: "Docker / K8s", note: "Horizontally scaled, on-demand game servers on Kubernetes since 2021." },
   { icon: "linux", name: "Linux", note: "Everything I run lives on Linux boxes I administer myself." },
@@ -31,6 +31,14 @@ export type Job = {
 };
 
 export const jobs: Job[] = [
+  {
+    role: "Hytale Developer",
+    org: "6b6t",
+    url: "https://6b6t.org/",
+    logo: "/logos/6b6t.webp",
+    from: "2026",
+    summary: "Maintaining the server's Hytale mods, and building new ones.",
+  },
   {
     role: "Kotlin Developer",
     org: "Unstable PvP",
