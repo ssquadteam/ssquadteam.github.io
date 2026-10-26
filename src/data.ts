@@ -32,6 +32,14 @@ export type Job = {
 
 export const jobs: Job[] = [
   {
+    role: "Kotlin Developer",
+    org: "OPLegends",
+    url: "https://oplegends.com/",
+    logo: "/logos/oplegends.webp",
+    from: "2026",
+    summary: "Working on the server's software and plugins.",
+  },
+  {
     role: "Hytale Developer",
     org: "6b6t",
     url: "https://6b6t.org/",
